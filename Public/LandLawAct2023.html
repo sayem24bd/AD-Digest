@@ -8,6 +8,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>ভূমি অপরাধ প্রতিরোধ ও প্রতিকার আইন, ২০২৩</title>
+
+    <link rel="icon" type="image/png" href="icon.png">
     
     <!-- Dynamic Manifest Link for PWA -->
     <link rel="manifest" id="dynamic-manifest">
@@ -511,22 +513,31 @@
         // PWA (Progressive Web App) Setup Start
         // ==========================================
 
-        // Dynamic App Icon (SVG Base64)
-        const appIconSvg = "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23166534'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E";
-
         // Generate and inject manifest.json dynamically
-        const manifestData = {
-            name: "ভূমি আইন ২০২৩ গাইড",
-            short_name: "ভূমি আইন",
-            description: "ভূমি অপরাধ প্রতিরোধ ও প্রতিকার আইন, ২০২৩ এর সম্পূর্ণ বিস্তারিত গাইড",
-            start_url: window.location.href,
-            display: "standalone",
-            background_color: "#f9fafb",
-            theme_color: "#15803d",
-            icons: [
-                { src: appIconSvg, sizes: "192x192 512x512", type: "image/svg+xml", purpose: "any maskable" }
-            ]
-        };
+const manifestData = {
+    name: "ভূমি আইন ২০২৩ গাইড",
+    short_name: "ভূমি আইন",
+    description: "ভূমি অপরাধ প্রতিরোধ ও প্রতিকার আইন, ২০২৩ এর সম্পূর্ণ বিস্তারিত গাইড",
+    start_url: window.location.href,
+    display: "standalone",
+    background_color: "#f9fafb",
+    theme_color: "#15803d",
+    icons: [
+        {
+            src: "icon.png", // images ফোল্ডারে রাখলে লিখবেন: "images/icon.png"
+            sizes: "192x192",
+            type: "image/png",
+            purpose: "any maskable"
+        },
+        {
+            src: "icon.png", // images ফোল্ডারে রাখলে লিখবেন: "images/icon.png"
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any maskable"
+        }
+    ]
+};
+
         const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
         document.getElementById('dynamic-manifest').href = URL.createObjectURL(manifestBlob);
 

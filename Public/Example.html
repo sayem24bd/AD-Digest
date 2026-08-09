@@ -8,10 +8,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>ভূমি অপরাধ প্রতিরোধ ও প্রতিকার আইন, ২০২৩</title>
     
-    <!-- Favicon and App Icons -->
-    <link rel="icon" type="image/png" href="icon.png">
-    <link rel="apple-touch-icon" href="icon.png">
-    
     <!-- Dynamic Manifest Link for PWA -->
     <link rel="manifest" id="dynamic-manifest">
     
@@ -429,7 +425,7 @@
                         </div>
                         <div class="flex-1 bg-gradient-to-br from-sky-50 to-blue-50 p-6 rounded-xl border border-sky-100 shadow-sm">
                             <i data-lucide="users" class="w-10 h-10 text-sky-600 mb-4"></i>
-                            <h4 class="font-bold text-sky-900 text-xl mb-3">সং সংস্থার সহায়তা (ধারা ২৪)</h4>
+                            <h4 class="font-bold text-sky-900 text-xl mb-3">সংস্থার সহায়তা (ধারা ২৪)</h4>
                             <p class="text-sky-800 text-lg leading-relaxed">আইন প্রয়োগে আইনশৃঙ্খলা বাহিনী বা কারিগরি জ্ঞানসম্পন্ন যে কোনো বেসরকারি এজেন্সির সহায়তা নেওয়া যাবে, যার খরচ প্রতিকার প্রার্থী বা অভিযুক্তকে বহন করতে হতে পারে।</p>
                         </div>
                     </div>
@@ -509,69 +505,112 @@
         highlightNavOnScroll();
 
         // ==========================================
-        // PWA (Progressive Web App) Setup Start
+        // Single-File Self-Contained PWA System
+        // Embedded High-Res Canvas Icon & Service Worker
         // ==========================================
 
-        // Image Path for App Icon
-        const appIconUrl = "icon.png";
+        // High Quality SVG Vector Representation of Your Uploaded Book & Scale Image
+        const customAppIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+            <rect width="512" height="512" rx="110" fill="#146c43"/>
+            <circle cx="256" cy="256" r="210" fill="none" stroke="#d4af37" stroke-width="8" opacity="0.8"/>
+            <path d="M256 120 C 200 80, 110 90, 80 130 L 80 370 C 110 330, 200 320, 256 360 C 312 320, 402 330, 432 370 L 432 130 C 402 90, 312 80, 256 120 Z" fill="#ffffff" stroke="#1d4ed8" stroke-width="12" stroke-linejoin="round"/>
+            <path d="M256 120 L 256 360" stroke="#1d4ed8" stroke-width="10"/>
+            <path d="M120 160 C 160 145, 210 145, 230 165" stroke="#93c5fd" stroke-width="6" stroke-linecap="round" fill="none"/>
+            <path d="M120 190 C 160 175, 210 175, 230 195" stroke="#93c5fd" stroke-width="6" stroke-linecap="round" fill="none"/>
+            <path d="M120 220 C 160 205, 210 205, 230 225" stroke="#93c5fd" stroke-width="6" stroke-linecap="round" fill="none"/>
+            <path d="M175 270 Q 185 240 195 230 Q 185 260 170 290 Z" fill="#d4af37"/>
+            <path d="M165 295 C 160 295, 155 300, 155 310 L 175 310 C 175 300, 170 295, 165 295 Z" fill="#1e3a8a"/>
+            <line x1="344" y1="160" x2="344" y2="240" stroke="#1e3a8a" stroke-width="6"/>
+            <line x1="300" y1="185" x2="388" y2="185" stroke="#1e3a8a" stroke-width="6"/>
+            <path d="M300 185 L 285 220 Q 300 235 315 220 Z" fill="none" stroke="#1e3a8a" stroke-width="5"/>
+            <path d="M388 185 L 373 220 Q 388 235 403 220 Z" fill="none" stroke="#1e3a8a" stroke-width="5"/>
+            <circle cx="344" cy="160" r="8" fill="#d4af37"/>
+        </svg>`;
 
-        // Generate and inject manifest.json dynamically with custom image icon
-        const manifestData = {
-            name: "ভূমি আইন ২০২৩ গাইড",
-            short_name: "ভূমি আইন",
-            description: "ভূমি অপরাধ প্রতিরোধ ও প্রতিকার আইন, ২০২৩ এর সম্পূর্ণ বিস্তারিত গাইড",
-            start_url: window.location.href,
-            display: "standalone",
-            background_color: "#f9fafb",
-            theme_color: "#15803d",
-            icons: [
-                { 
-                    src: appIconUrl, 
-                    sizes: "192x192 512x512", 
-                    type: "image/png", 
-                    purpose: "any maskable" 
-                }
-            ]
-        };
-        const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
-        document.getElementById('dynamic-manifest').href = URL.createObjectURL(manifestBlob);
-
-        // Service Worker setup with caching mechanism
-        const swCode = `
-            const CACHE_NAME = 'bhumi-ain-v3';
-            const ASSETS_TO_CACHE = [
-                './',
-                './icon.png'
-            ];
-
-            self.addEventListener('install', (e) => {
-                e.waitUntil(
-                    caches.open(CACHE_NAME).then((cache) => {
-                        return cache.addAll(ASSETS_TO_CACHE).catch(() => {});
-                    })
-                );
-                self.skipWaiting();
+        // Convert SVG Icon to PNG Data URL using HTML5 Canvas for Max Mobile Compatibility
+        function generateIconDataUrl() {
+            return new Promise((resolve) => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 512;
+                canvas.height = 512;
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                const svgBlob = new Blob([customAppIconSvg], { type: 'image/svg+xml;charset=utf-8' });
+                const url = URL.createObjectURL(svgBlob);
+                
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0);
+                    URL.revokeObjectURL(url);
+                    resolve(canvas.toDataURL('image/png'));
+                };
+                img.onerror = () => {
+                    // Fallback PNG Data URL
+                    resolve("data:image/svg+xml;utf8," + encodeURIComponent(customAppIconSvg));
+                };
+                img.src = url;
             });
-
-            self.addEventListener('activate', (e) => {
-                e.waitUntil(self.clients.claim());
-            });
-
-            self.addEventListener('fetch', (e) => {
-                e.respondWith(
-                    caches.match(e.request).then((response) => {
-                        return response || fetch(e.request);
-                    }).catch(() => new Response('Offline mode enabled.'))
-                );
-            });
-        `;
-        const swBlob = new Blob([swCode], { type: 'text/javascript' });
-        
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register(URL.createObjectURL(swBlob))
-                .then(() => console.log('PWA Service Worker Registered Successfully!'))
-                .catch(err => console.log('Service Worker Failed:', err));
         }
+
+        // Initialize PWA Setup
+        (async function initPwa() {
+            const iconPngDataUrl = await generateIconDataUrl();
+
+            // Set Apple Touch Icon & Favicon dynamically
+            let faviconLink = document.querySelector("link[rel*='icon']") || document.createElement('link');
+            faviconLink.type = 'image/png';
+            faviconLink.rel = 'shortcut icon';
+            faviconLink.href = iconPngDataUrl;
+            document.getElementsByTagName('head')[0].appendChild(faviconLink);
+
+            let appleIconLink = document.createElement('link');
+            appleIconLink.rel = 'apple-touch-icon';
+            appleIconLink.href = iconPngDataUrl;
+            document.getElementsByTagName('head')[0].appendChild(appleIconLink);
+
+            // Dynamically Inject Web App Manifest
+            const manifestData = {
+                name: "ভূমি অপরাধ প্রতিরোধ ও প্রতিকার আইন, ২০২৩",
+                short_name: "ভূমি আইন",
+                description: "ভূমি অপরাধ প্রতিরোধ ও প্রতিকার আইন, ২০২৩ এর বিস্তারিত গাইড",
+                start_url: window.location.pathname + window.location.search,
+                display: "standalone",
+                background_color: "#ffffff",
+                theme_color: "#15803d",
+                icons: [
+                    { src: iconPngDataUrl, sizes: "192x192", type: "image/png", purpose: "any" },
+                    { src: iconPngDataUrl, sizes: "512x512", type: "image/png", purpose: "any maskable" }
+                ]
+            };
+
+            const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
+            document.getElementById('dynamic-manifest').href = URL.createObjectURL(manifestBlob);
+
+            // Inline Service Worker Code
+            const swCode = `
+                const CACHE_NAME = 'bhumi-ain-standalone-v1';
+                self.addEventListener('install', (e) => {
+                    self.skipWaiting();
+                });
+                self.addEventListener('activate', (e) => {
+                    e.waitUntil(self.clients.claim());
+                });
+                self.addEventListener('fetch', (e) => {
+                    e.respondWith(
+                        fetch(e.request).catch(() => new Response('অফলাইন মোড সচল রয়েছে।'))
+                    );
+                });
+            `;
+            const swBlob = new Blob([swCode], { type: 'text/javascript' });
+            
+            if ('serviceWorker' in navigator) {
+                try {
+                    await navigator.serviceWorker.register(URL.createObjectURL(swBlob));
+                    console.log('Single-file PWA Service Worker Registered!');
+                } catch(err) {
+                    console.log('Service Worker Warning:', err);
+                }
+            }
+        })();
 
         // Handle PWA Install Prompt
         let deferredPrompt;
@@ -592,7 +631,7 @@
                 }
                 deferredPrompt = null;
             } else {
-                alert("আপনার ব্রাউজারে অ্যাপটি ইতিমধ্যে ইনস্টল করা আছে অথবা এই ব্রাউজার ইনস্টলেশন সাপোর্ট করে না (Google Chrome, Safari, বা Edge ব্যবহার করুন)।");
+                alert("অ্যাপটি ইনস্টল করতে আপনার ব্রাউজারের থ্রি-ডট (⋮) মেনুতে গিয়ে 'Add to Home screen' বা 'Install app' এ ক্লিক করুন।");
             }
         });
 

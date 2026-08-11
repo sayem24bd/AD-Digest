@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="bn" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <!-- Security hardening: restrict network/script destinations used by this single-file app. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; manifest-src 'self' blob:; media-src 'self' data: blob:;">
+    <title>পারিবারিক আদালত আইন, ২০২৩</title>
+    
+    <!-- Dynamic Manifest Link for PWA -->
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+    <link rel="apple-touch-icon" href="./icon-192.png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com" referrerpolicy="no-referrer"></script>
+    <!-- Google Fonts for Bengali (Noto Sans Bengali for crisp digits and text) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet" referrerpolicy="no-referrer">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest" referrerpolicy="no-referrer"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans Bengali"', '"Hind Siliguri"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Base Line Height & Typography fixes for Bengali Numbers */
+        body {
+            font-family: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif;
+            line-height: 1.85;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Scrollbar styles */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .nav-link.active {
+            background-color: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid #2563eb;
+            font-weight: 700;
+        }
+
+        .section-card {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        /* Number highlighting class */
+        .num-badge {
+            display: inline-block;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-right: 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans selection:bg-brand-200 selection:text-brand-900">
+
+    <!-- Top Navbar -->
+    <header class="fixed top-0 w-full bg-brand-900 text-white shadow-md z-50 h-16 flex items-center justify-between px-4 lg:px-8">
+        <div class="flex items-center gap-3 overflow-hidden">
+            <i data-lucide="scale" class="w-6 h-6 flex-shrink-0"></i>
+            <h1 class="text-lg md:text-xl font-bold truncate py-1">পারিবারিক আদালত আইন, ২০২৩</h1>
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="openSummaryModal()" class="bg-amber-400 text-brand-900 hover:bg-amber-300 px-3 py-1.5 rounded-lg text-xs md:text-sm font-bold flex items-center gap-1.5 transition-all shadow-sm">
+                <i data-lucide="zap" class="w-4 h-4"></i> <span class="hidden sm:inline">এক নজরে কিওয়ার্ড</span>
+            </button>
+            <button id="install-btn" class="hidden bg-brand-50 text-brand-900 hover:bg-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors shadow-sm">
+                <i data-lucide="download" class="w-4 h-4"></i> <span class="hidden sm:inline">ইনস্টল করুন</span>
+            </button>
+            <button id="mobile-menu-btn" class="lg:hidden p-2 hover:bg-brand-800 rounded-lg transition-colors">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="flex pt-16 min-h-screen">
+        
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 pt-16 z-40 w-72 bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out overflow-y-auto shadow-xl lg:shadow-none">
+            <div class="p-4 border-b border-gray-100 lg:hidden flex justify-between items-center">
+                <span class="font-bold text-gray-600">সূচিপত্র</span>
+                <button id="close-menu-btn" class="p-1 hover:bg-gray-100 rounded-md">
+                    <i data-lucide="x" class="w-5 h-5 text-gray-500"></i>
+                </button>
+            </div>
+            <nav class="flex flex-col py-4" id="nav-menu">
+                <a href="#preamble" class="nav-link px-6 py-3 text-gray-700 hover:bg-gray-50 hover:text-brand-700 flex items-center gap-3 transition-colors border-l-4 border-transparent leading-relaxed">
+                    <i data-lucide="file-text" class="w-5 h-5 flex-shrink-0"></i><span class="font-medium text-base">প্রস্তাবনা</span>
+                </a>
+                <a href="#sec-1" class="nav-link px-6 py-3 text-gray-700 hover:bg-gray-50 hover:text-brand-700 flex items-center gap-3 transition-colors border-l-4 border-transparent leading-relaxed">
+                    <i data-lucide="bookmark" class="w-5 h-5 flex-shrink-0"></i><span class="font-medium text-base"><span class="font-bold text-brand-900">১-৩।</span> সূচনা ও সংজ্ঞা</span>
+                </a>
+                <a href="#sec-4" class="nav-link px-6 py-3 text-gray-700 hover:bg-gray-50 hover:text-brand-700 flex items-center gap-3 transition-colors border-l-4 border-transparent leading-relaxed">
+                    <i data-lucide="home" class="w-5 h-5 flex-shrink-0"></i><span class="font-medium text-base"><span class="font-bold text-brand-900">৪-৫।</span> আদালত ও এখতিয়ার</span>
+                </a>
+                <a href="#sec-6" class="nav-link px-6 py-3 text-gray-700 hover:bg-gray-50 hover:text-brand-700 flex items-center gap-3 transition-colors border-l-4 border-transparent leading-relaxed">
+                    <i data-lucide="file-edit" class="w-5 h-5 flex-shrink-0"></i><span class="font-medium text-base"><span class="font-bold text-brand-900">৬-৯।</span> আরজি, সমন ও জবাব</span>
+                </a>
+                <a href="#sec-10" class="nav-link px-6 py-3 text-gray-700 hover:bg-gray-50 hover:text-brand-700 flex items-center gap-3 transition-colors border-l-4 border-transparent leading-relaxed">
+                    <i data-lucide="gavel" class="w-5 h-5 flex-shrink-0"></i><span class="font-medium text-base"><span class="font-bold text-brand-900">১০-১৭।</span> বিচার ও ডিক্রি</span>
+                </a>
+                <a href="#sec-18" class="nav-link px-6 py-3 text-gray-700 hover:bg-gray-50 hover:text-brand-700 flex items-center gap-3 transition-colors border-l-4 border-transparent leading-relaxed">
+                    <i data-lucide="trending-up" class="w-5 h-5 flex-shrink-0"></i><span class="font-medium text-base"><span class="font-bold text-brand-900">১৮-২১।</span> আপিল ও স্থানান্তর</span>
+                </a>
+                <a href="#sec-22" class="nav-link px-6 py-3 text-gray-700 hover:bg-gray-50 hover:text-brand-700 flex items-center gap-3 transition-colors border-l-4 border-transparent leading-relaxed">
+                    <i data-lucide="shield" class="w-5 h-5 flex-shrink-0"></i><span class="font-medium text-base"><span class="font-bold text-brand-900">২২-২৬।</span> অবমাননা ও মুসলিম আইন</span>
+                </a>
+                <a href="#sec-27" class="nav-link px-6 py-3 text-gray-700 hover:bg-gray-50 hover:text-brand-700 flex items-center gap-3 transition-colors border-l-4 border-transparent leading-relaxed">
+                    <i data-lucide="check-circle" class="w-5 h-5 flex-shrink-0"></i><span class="font-medium text-base"><span class="font-bold text-brand-900">২৭-৩১।</span> বিধি ও রহিতকরণ</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Overlay for mobile navigation -->
+        <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden lg:hidden"></div>
+
+        <!-- SLIDE-IN SUMMARY MODAL CARD (Hidden by default) -->
+        <div id="summary-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 hidden">
+            <div id="summary-content" class="bg-gradient-to-br from-brand-900 via-brand-800 to-blue-900 text-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 relative transform scale-95 translate-y-4 transition-all duration-300 border border-white/20">
+                
+                <!-- Close Button -->
+                <button onclick="closeSummaryModal()" class="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white p-2 rounded-full transition-colors">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+
+                <div class="flex items-center gap-3 mb-4 pr-10">
+                    <span class="bg-amber-400 text-brand-900 p-2.5 rounded-xl shadow-md">
+                        <i data-lucide="sparkles" class="w-6 h-6"></i>
+                    </span>
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-bold">এক নজরে আইনের সারসংক্ষেপ ও গুরুত্বপূর্ণ কিওয়ার্ড</h2>
+                        <p class="text-blue-200 text-xs md:text-sm">পাঠকদের সহজে ও দ্রুত আইনটি অনুধাবনের জন্য স্মার্ট গাইড</p>
+                    </div>
+                </div>
+
+                <!-- Quick Summary Highlights Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 my-6">
+                    <a href="#sec-1" onclick="closeSummaryModal()" class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 rounded-xl p-3.5 transition-all flex flex-col justify-between">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs bg-blue-500/30 text-blue-200 px-2 py-0.5 rounded font-semibold">ধারা ১-৩</span>
+                            <i data-lucide="map-pin" class="w-4 h-4 text-blue-300"></i>
+                        </div>
+                        <p class="font-bold text-sm text-white">প্রয়োগের এলাকা</p>
+                        <p class="text-xs text-blue-100 mt-1">৩ পার্বত্য জেলা ব্যতীত সমগ্র বাংলাদেশ।</p>
+                    </a>
+
+                    <a href="#sec-5" onclick="closeSummaryModal()" class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 rounded-xl p-3.5 transition-all flex flex-col justify-between">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs bg-emerald-500/30 text-emerald-200 px-2 py-0.5 rounded font-semibold">ধারা ৫</span>
+                            <i data-lucide="list-checks" class="w-4 h-4 text-emerald-300"></i>
+                        </div>
+                        <p class="font-bold text-sm text-white">৫টি মূল বিষয়বস্তু</p>
+                        <p class="text-xs text-blue-100 mt-1">বিবাহ বিচ্ছেদ, দেনমোহর, ভরণপোষণ, দাম্পত্য অধিকার ও অভিভাবকত্ব।</p>
+                    </a>
+
+                    <a href="#sec-7" onclick="closeSummaryModal()" class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 rounded-xl p-3.5 transition-all flex flex-col justify-between">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs bg-amber-500/30 text-amber-200 px-2 py-0.5 rounded font-semibold">ধারা ৭ & ২৫</span>
+                            <i data-lucide="receipt" class="w-4 h-4 text-amber-300"></i>
+                        </div>
+                        <p class="font-bold text-sm text-white">কোর্ট ফি ও সমন</p>
+                        <p class="text-xs text-blue-100 mt-1">কোর্ট ফি ২০০ টাকা; সমনে ইমেইল ও ডাক ব্যবহারের বিধান।</p>
+                    </a>
+
+                    <a href="#sec-8" onclick="closeSummaryModal()" class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 rounded-xl p-3.5 transition-all flex flex-col justify-between">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs bg-purple-500/30 text-purple-200 px-2 py-0.5 rounded font-semibold">ধারা ৮ & ১০</span>
+                            <i data-lucide="clock" class="w-4 h-4 text-purple-300"></i>
+                        </div>
+                        <p class="font-bold text-sm text-white">সময়সীমা</p>
+                        <p class="text-xs text-blue-100 mt-1">জবাব দাখিল ২১ দিন, একতরফা রহিতকরণ ৩০ দিন।</p>
+                    </a>
+
+                    <a href="#sec-19" onclick="closeSummaryModal()" class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 rounded-xl p-3.5 transition-all flex flex-col justify-between">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs bg-rose-500/30 text-rose-200 px-2 py-0.5 rounded font-semibold">ধারা ১৯</span>
+                            <i data-lucide="shield-alert" class="w-4 h-4 text-rose-300"></i>
+                        </div>
+                        <p class="font-bold text-sm text-white">আপিলের শর্ত</p>
+                        <p class="text-xs text-blue-100 mt-1">দেনমোহর ৫০,০০০ টাকা বা কম হলে আপিল অযোগ্য।</p>
+                    </a>
+
+                    <a href="#sec-22" onclick="closeSummaryModal()" class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 rounded-xl p-3.5 transition-all flex flex-col justify-between">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs bg-indigo-500/30 text-indigo-200 px-2 py-0.5 rounded font-semibold">ধারা ২২ & ২৩</span>
+                            <i data-lucide="alert-circle" class="w-4 h-4 text-indigo-300"></i>
+                        </div>
+                        <p class="font-bold text-sm text-white">অবমাননা জরিমানা</p>
+                        <p class="text-xs text-blue-100 mt-1">সমন অমান্যে ১০০ টাকা ও অবমাননায় ২০০ টাকা জরিমানা।</p>
+                    </a>
+                </div>
+
+                <!-- Interactive Fast Keyword Tags -->
+                <div class="border-t border-white/15 pt-4">
+                    <p class="text-xs text-blue-200 mb-2 font-medium flex items-center gap-1.5">
+                        <i data-lucide="key" class="w-3.5 h-3.5 text-amber-400"></i> দ্রুত খুঁজে নিতে কিওয়ার্ডে ক্লিক করুন:
+                    </p>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <a href="#sec-1" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#আঞ্চলিক_প্রয়োগ</a>
+                        <a href="#sec-4" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#সহকারী_জজ</a>
+                        <a href="#sec-5" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#এখতিয়ার (৫টি বিষয়)</a>
+                        <a href="#sec-6" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#আরজি_ফেরত</a>
+                        <a href="#sec-7" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#ইমেইল_সমন</a>
+                        <a href="#sec-8" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#লিখিত_জবাব_২১_দিন</a>
+                        <a href="#sec-10" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#একতরফা_ডিক্রি</a>
+                        <a href="#sec-11" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#বিচার-পূর্ব_আপোষ</a>
+                        <a href="#sec-12" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#রুদ্ধদ্বার_বিচার</a>
+                        <a href="#sec-17" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#ডিক্রি_বলবৎ</a>
+                        <a href="#sec-18" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#জেলা_জজ</a>
+                        <a href="#sec-19" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#আপিল_৫০_হাজার_টাকা</a>
+                        <a href="#sec-22" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#সমন_অমান্য_জরিমানা</a>
+                        <a href="#sec-23" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#আদালত_অবমাননা</a>
+                        <a href="#sec-24" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#পর্দানশিন_মহিলা</a>
+                        <a href="#sec-25" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#কোর্ট_ফি_২০০_টাকা</a>
+                        <a href="#sec-26" onclick="closeSummaryModal()" class="bg-white/15 hover:bg-white/30 text-white px-3 py-1.5 rounded-full transition-all border border-white/10">#চেয়ারম্যানের_নিকট_প্রতিলিপি</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="flex-1 lg:ml-72 p-4 md:p-8 max-w-5xl mx-auto space-y-8 overflow-x-hidden">
+
+            <!-- Preamble Section -->
+            <section id="preamble" class="scroll-mt-24">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+                    <div class="text-center border-b pb-6 mb-6">
+                        <h2 class="text-2xl md:text-3xl font-bold text-brand-900 py-1">পারিবারিক আদালত আইন, ২০২৩</h2>
+                        <p class="text-lg font-bold text-gray-700 py-1">(<span class="num-badge">২০২৩</span> সনের <span class="num-badge">২৬</span> নং আইন)</p>
+                        <p class="text-sm text-gray-500 font-bold py-1">[<span class="num-badge">১৮</span> সেপ্টেম্বর, <span class="num-badge">২০২৩</span>]</p>
+                    </div>
+                    
+                    <div class="bg-blue-50 border-l-4 border-brand-500 p-5 rounded-r-xl space-y-4 text-gray-800 text-lg">
+                        <p class="font-bold text-brand-900">Family Courts Ordinance, 1985 রহিতপূর্বক সময়োপযোগী করিয়া উহা পুনঃপ্রণয়নের উদ্দেশ্যে প্রণীত আইন</p>
+                        <p>যেহেতু সংবিধান (পঞ্চদশ সংশোধন) আইন, ২০১১ (২০১১ সনের ১৪ নং আইন) দ্বারা ১৯৮২ সনের ২৪ মার্চ হইতে ১৯৮৬ সনের ১১ নভেম্বর পর্যন্ত সময়ের মধ্যে সামরিক ফরমান দ্বারা জারীকৃত অধ্যাদেশসমূহের অনুমোদন ও সমর্থন সংক্রান্ত গণপ্রজাতন্ত্রী বাংলাদেশের সংবিধানের চতুর্থ তপশিলের ১৯ অনুচ্ছেদ বিলুপ্ত হইয়াছে এবং সিভিল আপিল নং-৪৮/২০১১ সুপ্রীম কোর্টের আপিল বিভাগ কর্তৃক প্রদত্ত রায়ে সামরিক আইনকে অসাংবিধানিক ঘোষণাপূর্বক উহার বৈধতা প্রদানকারী সংবিধান (সপ্তম সংশোধন) আইন, ১৯৮৬ (১৯৮৬ সনের ১ নং আইন) বাতিল ঘোষিত হওয়ায় উক্ত অধ্যাদেশসমূহের কার্যকারিতা লোপ পাইয়াছে; এবং</p>
+                        <p>যেহেতু ২০১৩ সনের ৭ নং আইন দ্বারা উক্ত অধ্যাদেশসমূহের মধ্যে কতিপয় অধ্যাদেশ কার্যকর রাখা হইয়াছে; এবং</p>
+                        <p>যেহেতু উক্ত অধ্যাদেশসমূহের আবশ্যকতা ও প্রাসঙ্গিকতা পর্যালোচনা করিয়া আবশ্যক বিবেচিত অধ্যাদেশসমূহ সকল স্টেক-হোল্ডার ও সংশ্লিষ্ট সকল মন্ত্রণালয় ও বিভাগের মতামত গ্রহণ করিয়া প্রয়োজনীয় সংশোধন ও পরিমার্জনক্রমে বাংলায় নূতন আইন প্রণয়ন করিবার জন্য সরকার সিদ্ধান্ত গ্রহণ করিয়াছে; এবং</p>
+                        <p>যেহেতু সরকারের উপরি-বর্ণিত সিদ্ধান্তের আলোকে Family Courts Ordinance, 1985 (Ordinance No. XVIII of 1985) রহিতক্রমে উহা সময়োপযোগী করিয়া পুনঃপ্রণয়ন করা সমীচীন ও প্রয়োজনীয়;</p>
+                        <p class="font-bold text-brand-900 pt-2">সেহেতু এতদ্বারা নিম্নরূপ আইন করা হইল:-</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 1-3 -->
+            <section id="sec-1" class="scroll-mt-24 space-y-6">
+                <div id="sec-1" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="bookmark" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">১।</span> সংক্ষিপ্ত শিরোনাম, প্রয়োগ ও প্রবর্তন
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> এই আইন পারিবারিক আদালত আইন, ২০২৩ নামে অভিহিত হইবে।</p>
+                        <p><span class="num-badge">(২)</span> ইহা রাঙ্গামাটি পার্বত্য জেলা, বান্দরবান পার্বত্য জেলা ও খাগড়াছড়ি পার্বত্য জেলা ব্যতীত সমগ্র বাংলাদেশে প্রয়োগ হইবে।</p>
+                        <p><span class="num-badge">(৩)</span> ইহা অবিলম্বে কার্যকর হইবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-2" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="book-open" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">২।</span> সংজ্ঞা
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> বিষয় বা প্রসঙ্গের পরিপন্থী কোনো কিছু না থাকিলে, এই আইনে,—</p>
+                        <div class="pl-4 space-y-2">
+                            <p><span class="num-badge">(ক) "ইমেইল"</span> অর্থ ইলেক্ট্রনিক, ডিজিটাল বা অন্য কোনো প্রযুক্তিগত পদ্ধতিতে প্রস্তুতকৃত এবং ইন্টারনেটের মাধ্যমে প্রেরিত বা প্রাপ্ত কোনো মেইল এবং তৎসংশ্লিষ্ট কোনো দলিলাদি;</p>
+                            <p><span class="num-badge">(খ) "দেওয়ানি কার্যবিধি"</span> অর্থ Code of Civil Procedure, 1908 (Act No. V of 1908);</p>
+                            <p><span class="num-badge">(গ) "নির্ধারিত"</span> অর্থ বিধি দ্বারা নির্ধারিত;</p>
+                            <p><span class="num-badge">(ঘ) "পারিবারিক আদালত"</span> অর্থ ধারা ৪ এর অধীন প্রতিষ্ঠিত পারিবারিক আদালত;</p>
+                            <p><span class="num-badge">(ঙ) "পারিবারিক আপিল আদালত"</span> অর্থ ধারা ১৮ এর অধীন প্রতিষ্ঠিত পারিবারিক আপিল আদালত;</p>
+                            <p><span class="num-badge">(চ) "ফৌজদারি কার্যবিধি"</span> অর্থ Code of Criminal Procedure, 1898 (Act No. V of 1898); এবং</p>
+                            <p><span class="num-badge">(ছ) "মুসলিম পারিবারিক আইন"</span> অর্থ Muslim Family Laws Ordinance, 1961 (Ordinance No. VIII of 1961)।</p>
+                        </div>
+                        <p><span class="num-badge">(২)</span> এই আইনে ব্যবহৃত যে সকল শব্দ ও অভিব্যক্তির সংজ্ঞা প্রদান করা হয় নাই, সেই সকল শব্দ বা выражение দেওয়ানি কার্যবিধিতে যে অর্থে ব্যবহৃত হইয়াছে সেই অর্থে প্রযোজ্য হইবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-3" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="award" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">৩।</span> আইনের প্রাধান্য
+                    </h3>
+                    <p class="text-lg pl-2">আপাতত বলবৎ অন্য কোনো আইনে যাহা কিছুই থাকুক না কেন, এই আইনের বিধানাবলি প্রাধান্য পাইবে।</p>
+                </div>
+            </section>
+
+            <!-- Section 4-5 -->
+            <section id="sec-4" class="scroll-mt-24 space-y-6">
+                <div id="sec-4" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="home" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">৪।</span> পারিবারিক আদালত প্রতিষ্ঠা
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> এই আইনের উদ্দেশ্য পূরণকল্পে, সরকার, সরকারি গেজেটে প্রজ্ঞাপন দ্বারা, প্রত্যেক জেলায় এক বা একাধিক পারিবারিক আদালত প্রতিষ্ঠা করিতে পারিবে:</p>
+                        <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700 my-2"><strong>তবে শর্ত থাকে যে,</strong> কোনো জেলায় একাধিক পারিবারিক আদালত প্রতিষ্ঠিত হইলে, সরকার, সরকারি গেজেটে প্রজ্ঞাপন দ্বারা, উক্ত আদালতসমূহের স্থানীয় এখতিয়ার নির্ধারণ করিবে।</p>
+                        <p><span class="num-badge">(২)</span> সহকারী জজ বা সিনিয়র সহকারী জজ পদমর্যাদার <span class="num-badge">১ (এক)</span> জন বিচারক সমন্বয়ে পারিবারিক আদালত গঠিত হইবে।</p>
+                        <p><span class="num-badge">(৩)</span> উপধারা <span class="num-badge">(১)</span> এর অধীন পারিবারিক আদালত প্রতিষ্ঠার পূর্ব পর্যন্ত স্বীয় অধিক্ষেত্রভুক্ত সহকারী জজ আদালত বা সিনিয়র সহকারী জজ আদালত পারিবারিক আদালত হিসাবে দায়িত্ব পালন করিবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-5" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="scale" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">৫।</span> পারিবারিক আদালতের এখতিয়ার
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p>মুসলিম পারিবারিক আইনের বিধানাবলি সাপেক্ষে, পারিবারিক আদালতে নিম্নরূপ সকল বা যেকোনো বিষয় সম্পর্কিত বা উহা হইতে উদ্ধৃত যেকোনো মোকদ্দমা গ্রহণ, বিচার এবং নিষ্পত্তির এখতিয়ার থাকিবে, যথা:-</p>
+                        <div class="grid md:grid-cols-2 gap-3 pt-2">
+                            <div class="bg-blue-50 p-3 rounded-xl border border-blue-100 font-semibold text-brand-900"><span class="num-badge">(ক)</span> বিবাহ বিচ্ছেদ;</div>
+                            <div class="bg-blue-50 p-3 rounded-xl border border-blue-100 font-semibold text-brand-900"><span class="num-badge">(খ)</span> দাম্পত্য অধিকার পুনরুদ্ধার;</div>
+                            <div class="bg-blue-50 p-3 rounded-xl border border-blue-100 font-semibold text-brand-900"><span class="num-badge">(গ)</span> দেনমোহর;</div>
+                            <div class="bg-blue-50 p-3 rounded-xl border border-blue-100 font-semibold text-brand-900"><span class="num-badge">(ঘ)</span> ভরণপোষণ; এবং</div>
+                            <div class="bg-blue-50 p-3 rounded-xl border border-blue-100 font-semibold text-brand-900 md:col-span-2"><span class="num-badge">(ঙ)</span> শিশু সন্তানদের অভিভাবকত্ব ও তত্ত্বাবধান।</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 6-9 -->
+            <section id="sec-6" class="scroll-mt-24 space-y-6">
+                <div id="sec-6" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="file-text" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">৬।</span> মোকদ্দমা দায়ের
+                    </h3>
+                    <div class="space-y-4 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> এই আইনের অধীন কোনো মোকদ্দমা সেই পারিবারিক আদালতে আরজি দাখিলের মাধ্যমে দায়ের করিতে হইবে যাহার এখতিয়ারের স্থানীয় সীমানার মধ্যে—</p>
+                        <div class="pl-4 space-y-2">
+                            <p><span class="num-badge">(ক)</span> মোকদ্দমার কারণ সম্পূর্ণভাবে বা আংশিকভাবে উদ্ভূত হইয়াছে; অথবা</p>
+                            <p><span class="num-badge">(খ)</span> পক্ষগণ একত্রে বসবাস করেন বা সর্বশেষ বসবাস করিয়াছিলেন:</p>
+                        </div>
+                        <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700"><strong>তবে শর্ত থাকে যে,</strong> বিবাহ বিচ্ছেদ, দেনমোহর বা ভরণপোষণের মোকদ্দমায় সেই আদালতেরও এখতিয়ার থাকিবে, যাহার এখতিয়ারের স্থানীয় সীমানার মধ্যে স্ত্রী সাধারণত বসবাস করেন।</p>
+                        
+                        <p><span class="num-badge">(২)</span> যে-ক্ষেত্রে কোনো এখতিয়ারবিহীন আদালতে কোনো আরজি দাখিল করা হয় সেইক্ষেত্রে—</p>
+                        <div class="pl-4 space-y-2">
+                            <p><span class="num-badge">(ক)</span> আরজিটি যে আদালতে দাখিল করা সমীচীন ছিল সেই আদালতে দাখিলের জন্য ফেরত দেওয়া হইবে; এবং</p>
+                            <p><span class="num-badge">(খ)</span> আরজি ফেরত প্রদানকারী আদালত ইহার নিকট আরজি দাখিলের ও ফেরত প্রদানের তারিখ, দাখিলকারীর নাম ও ফেরত প্রদানের কারণসমূহের সংক্ষিপ্ত বিবরণ আরজির উপর লিপিবদ্ধ করিবেন।</p>
+                        </div>
+
+                        <p><span class="num-badge">(৩)</span> আরজিতে বিরোধ সম্পর্কিত সকল অত্যাবশ্যকীয় তথ্যাদির উল্লেখ থাকিবে এবং উহার একটি তপশিল থাকিবে, যাহাতে আরজির সমর্থনে উপস্থিত করিতে ইচ্ছুক সাক্ষীগণের নাম ও ঠিকানার উল্লেখ থাকিবে:</p>
+                        <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700"><strong>তবে শর্ত থাকে যে,</strong> ন্যায় বিচারের স্বার্থে, আদালতের অনুমতি সাপেক্ষে, বাদী পরবর্তী যেকোনো সময়, যেকোনো সাক্ষীকে আদালতে হাজির করিতে পারিবেন।</p>
+
+                        <p><span class="num-badge">(৪)</span> আরজিতে নিম্নবর্ণিত বিষয়সমূহেরও উল্লেখ থাকিবে, যথা:-</p>
+                        <div class="pl-4 space-y-1">
+                            <p><span class="num-badge">(ক)</span> যে আদালতে মোকদ্দমা দায়ের করা হইবে উহার নাম;</p>
+                            <p><span class="num-badge">(খ)</span> বাদীর নাম, বর্ণনা ও বাসস্থান;</p>
+                            <p><span class="num-badge">(গ)</span> বিবাদীর নাম, বর্ণনা ও বাসস্থান;</p>
+                            <p><span class="num-badge">(ঘ)</span> বাদী বা বিবাদী নাবালক বা অপ্রকৃতিস্থ হইলে তৎসংশ্লিষ্ট একটি বিবরণী;</p>
+                            <p><span class="num-badge">(ঙ)</span> মোকদ্দমার কারণ সংক্রান্ত তথ্যাবলি এবং তাহা যেস্থানে ও তারিখে উদ্ভূত হইয়াছে;</p>
+                            <p><span class="num-badge">(চ)</span> আদালতের এখতিয়ার সম্পর্কিত তথ্যাবলি; এবং</p>
+                            <p><span class="num-badge">(ছ)</span> বাদীর প্রার্থীত প্রতিকার।</p>
+                        </div>
+
+                        <p><span class="num-badge">(৫)</span> যেক্ষেত্রে বাদী তাহার দাবির সমর্থনে সাক্ষ্য হিসাবে তাহার দখলে বা ক্ষমতাধীন রহিয়াছে এইরূপ কোনো দলিলের উপর নির্ভর করেন, সেইক্ষেত্রে তিনি আরজি দাখিলের সময় আদালতে উহা উপস্থাপন করিবেন এবং একই সময় উক্ত দলিল বা উহার কোনো অবিকল নকল বা ছায়ালিপি বা অন্য যেকোনো কপি আরজির সহিত নথিভুক্ত করিবার জন্য দাখিল করিবেন এবং উক্তরূপ দলিল আরজির সহিত সংযুক্ত করিবার তালিকায়ও উহা অন্তর্ভুক্ত করিবেন।</p>
+                        
+                        <p><span class="num-badge">(৬)</span> যেক্ষেত্রে বাদী তাহার দাবির সমর্থনে সাক্ষ্য হিসাবে এমন কোনো দলিলের উপর নির্ভর করেন, যাহা তাহার দখলে বা ক্ষমতাধীনে নাই, সেইক্ষেত্রে তিনি উক্ত দলিলটি আরজির সহিত সংযুক্ত করিবার তালিকায় অন্তর্ভুক্ত করিয়া সংশ্লিষ্ট দলিলটি যাহার দখলে বা ক্ষমতাধীনে রহিয়াছে তাহা উল্লেখ করিবেন।</p>
+                        
+                        <p><span class="num-badge">(৭)</span> উপধারা <span class="num-badge">(৫)</span> ও <span class="num-badge">(৬)</span> এ বর্ণিত তপশিল ও দলিলসমূহের তালিকাসহ মোকদ্দমাটিতে যতসংখ্যক বিবাদী রহিয়াছেন তাহার দ্বিগুণসংখ্যক আরজির অবিকল নকল উক্ত বিবাদীগণের উপর জারির জন্য আরজির সহিত দাখিল করিতে হইবে।</p>
+                        
+                        <p><span class="num-badge">(৮)</span> নিম্নলিখিত যেকোনো কারণে আরজি খারিজ হইবে, যথা:-</p>
+                        <div class="pl-4 space-y-1">
+                            <p><span class="num-badge">(ক)</span> উপধারা <span class="num-badge">(৭)</span> এর অধীন আবশ্যকতা অনুসারে তপশিল ও দলিলসমূহের তালিকাসহ আরজির অবিকল নকলসমূহ উহার সহিত সংযুক্ত না থাকে;</p>
+                            <p><span class="num-badge">(খ)</span> ধারা <span class="num-badge">৭</span> এর উপধারা <span class="num-badge">(৫)</span> অনুযায়ী সমন জারির খরচ এবং নোটিশের জন্য ডাক খরচ পরিশোধিত না হয়;</p>
+                            <p><span class="num-badge">(গ)</span> আরজি উপস্থাপনের সময় ধারা <span class="num-badge">২৫</span> অনুযায়ী প্রদেয় ফি পরিশোধ করা না হয়।</p>
+                        </div>
+
+                        <p><span class="num-badge">(৯)</span> যেক্ষেত্রে আরজি দাখিল করিবার সময় বাদী কর্তৃক কোনো দলিল আদালতে দাখিল করিবার প্রয়োজন ছিল অথবা আরজির সহিত সংযুক্ত করিবার তালিকায় অন্তর্ভুক্ত করিবার প্রয়োজন ছিল, তবে উহা দাখিল বা অন্তর্ভুক্ত করা হয় নাই, সেইক্ষেত্রে মোকদ্দমার শুনানির সময় আদালতের অনুমতি ব্যতীত উহা তাহার পক্ষে সাক্ষ্য হিসাবে গৃহীত হইবে না:</p>
+                        <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700"><strong>তবে শর্ত থাকে যে,</strong> আদালত কোনো ব্যতিক্রমী ক্ষেত্র ব্যতীত এইরূপ অনুমতি প্রদান করিবে না।</p>
+                    </div>
+                </div>
+
+                <div id="sec-7" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="send" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">৭।</span> সমন ও নোটিশ জারিকরণ
+                    </h3>
+                    <div class="space-y-4 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> পারিবারিক আদালতে আরজি দাখিল করিবার পর আদালত নিম্নরূপ উদ্যোগ গ্রহণ করিবে, যথা:-</p>
+                        <div class="pl-4 space-y-2">
+                            <p><span class="num-badge">(ক)</span> বিবাদীর উপস্থিতির জন্য সাধারণভাবে অনধিক <span class="num-badge">৩০ (ত্রিশ)</span> দিনের একটি তারিখ ধার্যকরণ;</p>
+                            <p><span class="num-badge">(খ)</span> বিবাদীর প্রতি নির্ধারিত তারিখে হাজির হইবার এবং জবাব প্রদানের জন্য সমন জারি;</p>
+                            <p><span class="num-badge">(গ)</span> বিবাদীর নিকট প্রাপ্তিস্বীকারপত্র সংবলিত রেজিস্ট্রি ডাকযোগে মোকদ্দমার নোটিশ প্রেরণ; এবং</p>
+                            <p><span class="num-badge">(ঘ)</span> উপরিউক্ত দফা <span class="num-badge">(খ)</span> ও <span class="num-badge">(গ)</span> এর অধীন সমন জারি ও নোটিশ প্রেরণের পাশাপাশি আদালত, বাদী কর্তৃক খরচ বহন করিবার শর্তে, আরজিতে উল্লিখিত বা প্রযোজ্য ক্ষেত্রে বাদী কর্তৃক সরবরাহকৃত বিবাদীর ইমেইল ঠিকানায় সমন জারি করিবেন, তবে ইমেইল ঠিকানার সঠিকতা সম্পর্কে আদালত সন্তুষ্ট হইলে উক্তরূপে জারীকৃত সমন বিবাদীর উপর যথাযথভাবে জারি হইয়াছে বলিয়া গণ্য হইবে।</p>
+                        </div>
+
+                        <p><span class="num-badge">(২)</span> উপধারা <span class="num-badge">(১)</span> এর অধীন জারীকৃত প্রত্যেকটি সমন এবং প্রেরিত নোটিশের সহিত আরজির নকল এবং ধারা <span class="num-badge">৬</span> এর উপধারা <span class="num-badge">(৫)</span> ও <span class="num-badge">(৬)</span> এ উল্লিখিত দলিলসমূহের তালিকার অনুলিপি সংযুক্ত করিতে হইবে।</p>
+
+                        <p><span class="num-badge">(৩)</span> উপধারা <span class="num-badge">(১)</span> এর দফা <span class="num-badge">(খ)</span> এর অধীন জারীকৃত সমন দেওয়ানি কার্যবিধির <span class="num-badge">৫</span> নং আদেশের বিধি <span class="num-badge">৯(১), ৯(২), ৯(৪), ৯(৫), ৯এ, ১০, ১১, ১৬, ১৭, ১৮, ১৯, ২০, ২১, ২৩, ২৪, ২৫(১), ২৬, ২৭, ২৮</span> এবং <span class="num-badge">২৯</span> এ বর্ণিত পদ্ধতিতে জারি করিতে হইবে এবং উক্তরূপে জারীকৃত সমন বিবাদীর উপর যথাযথভাবে জারি হইয়াছে বলিয়া গণ্য হইবে।</p>
+
+                        <p><span class="num-badge">(৪)</span> উপধারা <span class="num-badge">(১)</span> এর দফা <span class="num-badge">(গ)</span> এর অধীন প্রেরিত নোটিশ বিবাদীর উপর তখনই যথাযথভাবে জারি হইয়াছে বলিয়া গণ্য হইবে যখন বিবাদী কর্তৃক স্বাক্ষরিত প্রাপ্তিস্বীকারপত্র আদালত কর্তৃক গৃহীত হয় অথবা আদালত নোটিশ বহনকারী ডাকটি ডাক কর্মচারীর এই মর্মে লিখিত মন্তব্যসহ ফেরত পান যে, নোটিশ বহনকারী ডাক বিবাদীকে প্রদানে যাচনা করিবার পর তিনি উহা গ্রহণে অস্বীকৃতি জ্ঞাপন করিয়াছেন:</p>
+                        <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700"><strong>তবে শর্ত থাকে যে,</strong> নোটিশ যথাযথভাবে ঠিকানাযুক্ত অগ্রিম প্রদত্ত প্রাপ্তিস্বীকারপত্রসহ রেজিস্ট্রি ডাকযোগে যথাযথভাবে প্রেরিত হইয়া থাকিলে নোটিশ ডাকে দেওয়ার তারিখ হইতে <span class="num-badge">৩০ (ত্রিশ)</span> দিন অতিবাহিত হইবার পর যদি প্রাপ্তিস্বীকারপত্রটি হারাইয়া যায় বা ভুল ঠিকানায় চলিয়া যায় বা অন্য কোনো কারণে উক্ত সময়ের মধ্যে আদালত কর্তৃক প্রাপ্ত না হয় তাহা হইলে বিবাদীর উপর উহা যথাযথভাবে জারি হইয়াছে বলিয়া গণ্য হইবে।</p>
+
+                        <p><span class="num-badge">(৫)</span> উপধারা <span class="num-badge">(১)</span> এর দফা <span class="num-badge">(খ)</span> এর অধীন জারীকৃত সমন প্রেরণ সংক্রান্ত খরচ দেওয়ানি কার্যবিধির অধীন সমন জারির খরচের ন্যায় হইবে এবং উপধারা <span class="num-badge">(১)</span> এর দফা <span class="num-badge">(গ)</span> এর অধীন প্রেরিত নোটিশের ডাক খরচ আরজি দাখিলের সময় বাদী কর্তৃক প্রদেয় হইবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-8" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="file-check" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">৮।</span> লিখিত জবাব
+                    </h3>
+                    <div class="space-y-4 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> বিবাদীর উপস্থিতির জন্য নির্ধারিত তারিখে, বাদী ও বিবাদী পারিবারিক আদালতে হাজির হইবে এবং বিবাদী তাহার আত্মপক্ষ সমর্থনে লিখিত জবাব দাখিল করিবেন:</p>
+                        <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700"><strong>তবে শর্ত থাকে যে,</strong> বিবাদী উপযুক্ত কারণ প্রদর্শনপূর্বক সময় প্রার্থনা করিলে আদালত তাহার আত্মপক্ষ সমর্থনে লিখিত জবাব দাখিলের জন্য অনধিক <span class="num-badge">২১ (একুশ)</span> দিনের মধ্যে অপর একটি তারিখ ধার্য করিতে পারিবে।</p>
+
+                        <p><span class="num-badge">(২)</span> লিখিত জবাবে আত্মপক্ষ সমর্থনে উপস্থিত করিতে ইচ্ছুক সাক্ষীগণের নাম ও ঠিকানার তফসিল থাকিবে:</p>
+                        <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700"><strong>তবে শর্ত থাকে যে,</strong> বিবাদী আদালতের অনুমতি সাপেক্ষে, পরবর্তী যেকোনো পর্যায়ে সাক্ষী আহ্বান করিতে পারিবে, যদি আদালত মনে করে যে, ন্যায়বিচারের স্বার্থে উক্ত সাক্ষ্য গ্রহণ প্রয়োজন।</p>
+
+                        <p><span class="num-badge">(৩)</span> যেক্ষেত্রে বিবাদী তাহার আত্মপক্ষ সমর্থনে সাক্ষ্য হিসাবে তাহার দখলে বা ক্ষমতাধীনে রহিয়াছে এইরূপ কোনো দলিলের উপর নির্ভর করেন সেইক্ষেত্রে তিনি লিখিত জবাব দাখিলের সময় আদালতে উহা উপস্থাপন করিবেন এবং একই সময় উক্ত দলিল বা উহার কোনো অবিকল নকল বা ছায়ালিপি বা অন্য যেকোনো কপি লিখিত জবাবের সহিত নথিভুক্ত করিবার জন্য দাখিল করিবেন এবং উক্ত দলিল একটি তালিকায় অন্তর্ভুক্ত করিয়া উহা লিখিত জবাবের সহিত সংযুক্ত করিবেন।</p>
+
+                        <p><span class="num-badge">(৪)</span> যেক্ষেত্রে বিবাদী তাহার লিখিত জবাবের সমর্থনে সাক্ষ্য হিসাবে এমন কোনো দলিলের উপর নির্ভর করেন যাহা তাহার দখলে বা ক্ষমতাধীন নাই, সেইক্ষেত্রে তিনি লিখিত জবাবের সহিত সংযুক্ত করিবার তালিকায় এইরূপ দলিল অন্তর্ভুক্ত করিবেন এবং যাহার দখলে বা ক্ষমতাধীন উহা রহিয়াছে তাহা উল্লেখ করিবেন।</p>
+
+                        <p><span class="num-badge">(৫)</span> উপধারা <span class="num-badge">(২), (৩)</span> ও <span class="num-badge">(৪)</span> এ বর্ণিত তপশিল ও দলিলসমূহের তালিকাসহ মোকদ্দমাতে যতসংখ্যক বাদী রহিয়াছে তাহার দ্বিগুণসংখ্যক লিখিত জবাবের অবিকল নকল লিখিত জবাবের সহিত প্রদান করিতে হইবে।</p>
+
+                        <p><span class="num-badge">(৬)</span> উপধারা <span class="num-badge">(৫)</span> এ বর্ণিত তপশিল, দলিল এবং দলিলসমূহের তালিকাসহ লিখিত জবাবের অনুলিপি বাদী, ক্ষেত্রমত, আদালতে উপস্থিত তাহার প্রতিনিধি বা আইনজীবীকে প্রদান করিতে হইবে।</p>
+
+                        <p><span class="num-badge">(৭)</span> যেক্ষেত্রে লিখিত জবাব দাখিল করিবার সময় বিবাদী কর্তৃক কোনো দলিল আদালতে দাখিল করিবার প্রয়োজন ছিল অথবা লিখিত জবাবের সহিত সংযুক্ত করিবার তালিকায় অন্তর্ভুক্ত করিবার প্রয়োজন ছিল তবে উহা দাখিল বা অন্তর্ভুক্ত করা হয় নাই, সেইক্ষেত্রে আদালতের অনুমতি ব্যতীত, মোকদ্দমার শুনানিতে উক্ত দলিল তাহার অনুকূলে সাক্ষ্য হিসাবে গৃহীত হইবে না।</p>
+
+                        <p><span class="num-badge">(৮)</span> আদালত কোনো ব্যতিক্রমী ক্ষেত্র ব্যতীত উপধারা <span class="num-badge">(৭)</span> এর অধীন কোনো দলিল অন্তর্ভুক্তির অনুমতি প্রদান করিবে না।</p>
+                    </div>
+                </div>
+
+                <div id="sec-9" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="edit-3" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">৯।</span> আরজি ও লিখিত জবাব সংশোধন
+                    </h3>
+                    <p class="text-lg pl-2">এই আইনে যাহা কিছুই থাকুক না কেন, মোকদ্দমার যেকোনো পর্যায়ে আদালত, কোনো পক্ষের আবেদনের পরিপ্রেক্ষিতে, করণিক ভুল সংশোধনের উদ্দেশ্যে অথবা অন্য কোনো কারণে পক্ষগণের মধ্যে ন্যায়বিচার নিশ্চিত করিবার জন্য আরজি বা লিখিত জবাব সংশোধনের আদেশ দিতে পারিবে:</p>
+                    <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700 mt-2 text-lg"><strong>তবে শর্ত থাকে যে,</strong> যদি আদালতের নিকট প্রতীয়মান হয়, এইরূপ সংশোধনের আবেদন মোকদ্দমার বিচার কার্যক্রম বিলম্বিত করিবার উদ্দেশ্যে আনয়ন করা হইয়াছে, সেইক্ষেত্রে আদালত উক্তরূপ সংশোধনীর আদেশ প্রদান করিবে না।</p>
+                </div>
+            </section>
+
+            <!-- Section 10-17 -->
+            <section id="sec-10" class="scroll-mt-24 space-y-6">
+                <div id="sec-10" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="user-x" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">১০।</span> পক্ষগণের অনুপস্থিতির ফলাফল
+                    </h3>
+                    <div class="space-y-4 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> বিবাদীর উপস্থিতির জন্য ধার্যকৃত তারিখে মোকদ্দমার শুনানির জন্য ডাকা হইলে উক্ত সময়ে কোনো পক্ষই উপস্থিত না থাকিলে, আদালত মোকদ্দমা খারিজ করিয়া দিতে পারিবে।</p>
+
+                        <p><span class="num-badge">(২)</span> যেক্ষেত্রে মোকদ্দমা শুনানির জন্য ডাকা হইলে বাদী উপস্থিত হন, তবে বিবাদী অনুপস্থিত থাকেন, সেইক্ষেত্রে—</p>
+                        <div class="pl-4 space-y-2">
+                            <p><span class="num-badge">(ক)</span> যদি প্রমাণিত হয় যে, বিবাদীর প্রতি সমন বা নোটিশ যথাযথভাবে জারি করা হইয়াছে, তাহা হইলে আদালত মোকদ্দমাটি একতরফাভাবে নিষ্পত্তির লক্ষ্যে কার্যক্রম গ্রহণ করিতে পারিবে;</p>
+                            <p><span class="num-badge">(খ)</span> যদি সমন বা নোটিশ বিবাদীর উপর যথাযথভাবে জারি করা হইয়াছে মর্মে প্রমাণিত না হয়, তাহা হইলে আদালত বিবাদীর উপর নূতনভাবে সমন ও নোটিশ জারি করিবার আদেশ প্রদান করিবে;</p>
+                            <p><span class="num-badge">(গ)</span> যদি প্রমাণিত হয় যে, বিবাদীর প্রতি সমন বা নোটিশ জারি করা হইয়াছে, তবে তাহার উপস্থিতির জন্য ধার্যকৃত তারিখে তাহাকে উপস্থিত হইয়া জবাব প্রদানের যথেষ্ট সময় দেওয়া হয় নাই, তাহা হইলে আদালত পরবর্তী অনধিক <span class="num-badge">২১ (একুশ)</span> দিনের মধ্যে নির্ধারিত কোনো তারিখ পর্যন্ত মোকদ্দমার শুনানি স্থগিত রাখিবে এবং বিবাদীকে উক্ত তারিখ সম্পর্কে নোটিশ প্রদান করিবে।</p>
+                        </div>
+
+                        <p><span class="num-badge">(৩)</span> যেক্ষেত্রে আদালত মোকদ্দমার শুনানি মুলতবি করিয়া একতরফা শুনানির জন্য ধার্য করে এবং বিবাদী শুনানিকালে বা তৎপূর্বে আদালতে হাজির হইয়া পূর্বে হাজির না হইবার উপযুক্ত কারণ উল্লেখ করে, সেইক্ষেত্রে আদালত, উপযুক্ত মনে করিলে, শর্তসাপেক্ষে বিবাদীকে জবাব দাখিলের সুযোগ প্রদান করিয়া এইরূপে শুনানি করিবে যেন তিনি তাহার হাজির হইবার জন্য ধার্যকৃত দিনেই উপস্থিত হইয়াছেন।</p>
+
+                        <p><span class="num-badge">(৪)</span> যেক্ষেত্রে মোকদ্দমা শুনানির জন্য ডাকা হইলে বিবাদী উপস্থিত হন, তবে বাদী অনুপস্থিত থাকেন, সেইক্ষেত্রে আদালত মোকদ্দমা খারিজ করিবে, তবে বিবাদী যদি দাবির সম্পূর্ণ বা অংশবিশেষ স্বীকার করে, তাহা হইলে বিবাদীর উক্তরূপ স্বীকৃতির উপর আদালত বিবাদীর বিরুদ্ধে ডিক্রি প্রদান করিবে এবং যেক্ষেত্রে দাবির অংশবিশেষ স্বীকার করা হইয়াছে, সেইক্ষেত্রে মোকদ্দমাটি ততটুকু খারিজ করিবে যতটুকু দাবির অবশিষ্টাংশের সহিত সম্পর্কিত।</p>
+
+                        <p><span class="num-badge">(৫)</span> যেক্ষেত্রে কোনো মোকদ্দমা উপধারা <span class="num-badge">(১)</span> এর অধীন খারিজ করা হয় অথবা উপধারা <span class="num-badge">(৪)</span> এর অধীন সম্পূর্ণ বা আংশিক খারিজ করা হয়, সেইক্ষেত্রে বাদী, খারিজ আদেশ প্রদানের <span class="num-badge">৩০ (ত্রিশ)</span> দিনের মধ্যে, আদেশ প্রদানকারী আদালতে উক্ত আদেশ রহিত করিবার জন্য আবেদন করিতে পারিবেন এবং যদি তিনি আদালতকে এই মর্মে সন্তুষ্ট করিতে সক্ষম হন যে, মোকদ্দমাটি শুনানির সময় তাহার অনুপস্থিতির জন্য যথেষ্ট কারণ ছিল, তাহা হইলে আদালত খারিজ আদেশ রহিত করিয়া একটি আদেশ প্রদান করিবে এবং মোকদ্দমাটি চালাইয়া যাইবার জন্য একটি তারিখ ধার্য করিবে :</p>
+                        <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700"><strong>তবে শর্ত থাকে যে,</strong> মোকদ্দমার খরচ বা অন্য কোনো বিষয়ে আদালত যেরূপ উপযুক্ত মনে করিবে সেইরূপ শর্তে উপধারা <span class="num-badge">(৪)</span> এর অধীন মোকদ্দমার খারিজ আদেশ রহিত করিতে পারিবে:<br><strong>আরও শর্ত থাকে যে,</strong> বিবাদীর উপর আবেদনের নোটিশ জারি না করা পর্যন্ত উপধারা <span class="num-badge">(৪)</span> এর অধীন মোকদ্দমার খারিজ আদেশ রহিত করা যাইবে না।</p>
+
+                        <p><span class="num-badge">(৬)</span> বিবাদীর বিরুদ্ধে একতরফাভাবে ডিক্রি প্রদান করা হইলে, তিনি ডিক্রি প্রদানের <span class="num-badge">৩০ (ত্রিশ)</span> দিনের মধ্যে, ডিক্রি প্রদানকারী আদালতে উহা বাতিলের আদেশ দানের জন্য আবেদন করিতে পারিবেন এবং তিনি যদি আদালতকে সন্তুষ্ট করিতে সক্ষম হন যে, মোকদ্দমার শুনানির সময় তাহার আদালতে অনুপস্থিত থাকিবার যথেষ্ট কারণ ছিল, তাহা হইলে আদালত খরচ বা অন্য কোনো বিষয়ে যেরূপ উপযুক্ত মনে করিবে, সেইরূপ শর্তে তাহার বিরুদ্ধে প্রদত্ত ডিক্রি বাতিল করিবার আদেশ প্রদান করিবে এবং মোকদ্দমাটি পরিচালনার জন্য একটি নির্দিষ্ট তারিখ ধার্য করিবে:</p>
+                        <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700"><strong>তবে শর্ত থাকে যে,</strong> যদি ডিক্রিটি এমন হয় যে, তাহা কেবল উক্ত বিবাদীর বিরুদ্ধেই বাতিল করা যায় না, তাহা হইলে সকল বা অন্য যেকোনো বিবাদীর বিরুদ্ধে প্রদত্ত ডিক্রি বাতিল করা যাইবে:<br><strong>আরও শর্ত থাকে যে,</strong> বাদীর উপর আবেদনের নোটিশ জারি না করিয়া এই উপধারার অধীন কোনো আদেশ প্রদান করা যাইবে না।</p>
+
+                        <p><span class="num-badge">(৭)</span> Limitation Act, 1908 (Act No. IX of 1908) এর section 5 এর বিধানাবলি উপধারা <span class="num-badge">(৬)</span> এর অধীন আবেদনের ক্ষেত্রে প্রযোজ্য হইবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-11" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="play-circle" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">১১।</span> বিচার-পূর্ব কার্যক্রম
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> লিখিত জবাব দাখিল করা হইলে পারিবারিক আদালত মোকদ্দমার বিচার-পূর্ব শুনানির জন্য অনধিক <span class="num-badge">৩০ (ত্রিশ)</span> দিনের একটি তারিখ ধার্য করিবে।</p>
+                        <p><span class="num-badge">(২)</span> বিচার-পূর্ব শুনানির জন্য ধার্যকৃত তারিখে আদালত আরজি, লিখিত জবাব এবং পক্ষগণ কর্তৃক দাখিলকৃত দলিলসমূহ পরীক্ষা করিবে এবং যথাযথ মনে করিলে, পক্ষগণের বক্তব্যও শ্রবণ করিবে।</p>
+                        <p><span class="num-badge">(৩)</span> আদালত বিচার-পূর্ব শুনানিকালে পক্ষগণের মধ্যে বিরোধীয় বিষয়সমূহ ধার্য করিবে এবং সম্ভব হইলে পক্ষগণের মধ্যে একটি আপোষ বা মীমাংসার চেষ্টা করিবে।</p>
+                        <p><span class="num-badge">(৪)</span> উপধারা <span class="num-badge">(৩)</span> এর অধীন আপোষ বা মীমাংসা প্রতিষ্ঠা সম্ভব না হইলে আদালত মোকদ্দমার বিচার্য বিষয় গঠন করিবে এবং সাক্ষ্য গ্রহণের জন্য অনধিক <span class="num-badge">৩০ (ত্রিশ)</span> দিনের একটি তারিখ ধার্য করিবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-12" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="lock" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">১২।</span> রুদ্ধদ্বার কক্ষে বিচার
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> পারিবারিক আদালত বা পারিবারিক আপিল আদালত, উপযুক্ত মনে করিলে, এই আইনের অধীন কোনো মোকদ্দমার কার্যধারার সম্পূর্ণ বা কোনো অংশবিশেষ রুদ্ধদ্বার কক্ষে অনুষ্ঠান করিতে পারিবে।</p>
+                        <p><span class="num-badge">(২)</span> যেক্ষেত্রে মোকদ্দমার কার্যধারা উভয়পক্ষ রুদ্ধদ্বার কক্ষে অনুষ্ঠানের জন্য আদালতকে অনুরোধ করেন, সেইক্ষেত্রে আদালত উহা রুদ্ধদ্বার কক্ষে অনুষ্ঠান করিবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-13" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="file-text" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">১৩।</span> সাক্ষ্য লিপিবদ্ধকরণ
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> সাক্ষ্য লিপিবদ্ধ করিবার জন্য নির্ধারিত তারিখে, পারিবারিক আদালত যেরূপ উপযুক্ত মনে করিবে সেইরূপে উভয় পক্ষ কর্তৃক হাজিরকৃত সাক্ষীদের সাক্ষ্য গ্রহণ করিবে।</p>
+                        <p><span class="num-badge">(২)</span> আদালত কোনো পক্ষের সাক্ষীর উপস্থিতির জন্য কোনো সমন জারি করিবে না, যদি না মোকদ্দমার বিচার্য বিষয় গঠন করিবার পর <span class="num-badge">৩ (তিন)</span> দিনের মধ্যে কোনো পক্ষ আদালতকে এই মর্মে অবহিত করে যে, উক্ত পক্ষ আদালতের মাধ্যমে কোনো সাক্ষীকে সমন জারি করাইতে ইচ্ছুক এবং আদালত যদি সন্তুষ্ট হন যে, উক্ত পক্ষের জন্য সাক্ষীকে হাজির করানো সম্ভব নহে বা বাস্তবসম্মত নহে, তাহা হইলে সাক্ষীকে হাজির করিবার জন্য সমন জারি করা যাইবে।</p>
+                        <p><span class="num-badge">(৩)</span> সাক্ষীগণ তাহাদের নিজের ভাষায় সাক্ষ্য প্রদান করিবেন এবং তাহাদের জেরা ও পুনঃজবানবন্দি গ্রহণ করা যাইবে।</p>
+                        <p><span class="num-badge">(৪)</span> আদালত এইরূপ কোনো প্রশ্ন জিজ্ঞাসা করিতে নিষেধ করিতে পারিবে যাহা উহার নিকট অশ্লীল, মানহানিকর বা তুচ্ছ বলিয়া মনে হইবে অথবা যাহা অপমান বা বিরক্তির উদ্রেক করিবার উদ্দেশ্যে বা অপ্রয়োজনীয়ভাবে আক্রমণাত্মক বলিয়া আদালতের নিকট প্রতীয়মান হইবে।</p>
+                        <p><span class="num-badge">(৫)</span> আদালত উপযুক্ত মনে করিলে মোকদ্দমার জন্য প্রয়োজনীয় কোনো বিষয়ের ব্যাখ্যার উদ্দেশ্যে যেকোনো সাক্ষীকে যেকোনো প্রশ্ন জিজ্ঞাসা করিতে পারিবে।</p>
+                        <p><span class="num-badge">(৬)</span> আদালত উপযুক্ত মনে করিলে কোনো সাক্ষীর সাক্ষ্য হলফনামার মাধ্যমে প্রদানের অনুমতি প্রদান করিতে পারিবে:</p>
+                        <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700"><strong>তবে শর্ত থাকে যে,</strong> আদালত উপযুক্ত মনে করিলে, উক্ত সাক্ষীকে পরীক্ষার জন্য ডাকিতে পারিবে।</p>
+                        <p><span class="num-badge">(৭)</span> প্রত্যেক সাক্ষী কর্তৃক প্রদত্ত সাক্ষ্য মোকদ্দমা পরিচালনাকারী বিচারক কর্তৃক আদালতের ভাষায় লিখিত হইবে এবং উক্ত বিচারক উহাতে স্বাক্ষর করিবেন।</p>
+                        <p><span class="num-badge">(৮)</span> কোনো সাক্ষী আদালতের ভাষা ব্যতীত অন্য কোনো ভাষায় সাক্ষ্য প্রদান করিলে, মোকদ্দমা পরিচালনাকারী বিচারক, যতদূর সম্ভব, উক্ত ভাষাতেই তাহা লিপিবদ্ধ করিবেন এবং আদালতের ভাষায় উক্ত সাক্ষ্যের একটি নির্ভরযোগ্য অনুবাদ রেকর্ডের অংশ হিসাবে গণ্য হইবে।</p>
+                        <p><span class="num-badge">(৯)</span> সাক্ষীর সাক্ষ্য লিপিবদ্ধ করিবার পর উহা তাহাকে পড়িয়া শুনাইতে হইবে এবং, প্রয়োজনে, উহা সংশোধন করিতে হইবে।</p>
+                        <p><span class="num-badge">(১০)</span> সাক্ষ্যের কোনো অংশের শুদ্ধতা সাক্ষী অস্বীকার করিলে, মোকদ্দমা পরিচালনাকারী বিচারক, উক্ত সাক্ষ্য শুদ্ধ করিবার পরিবর্তে, সাক্ষী কর্তৃক উত্থাপিত আপত্তির একটি স্মারক প্রস্তুত করিতে পারিবেন এবং উহাতে তিনি যেরূপ প্রয়োজনীয় মনে করিবেন সেইরূপ মন্তব্য সংযোজন করিবেন।</p>
+                        <p><span class="num-badge">(১১)</span> যে ভাষায় সাক্ষ্য লিখিত হইয়াছে তাহা যদি প্রদত্ত সাক্ষ্যের ভাষা হইতে পৃথক হয় এবং সাক্ষী যদি উক্ত ভাষা বুঝিতে অক্ষম হন, তাহা হইলে সাক্ষী যে ভাষায় সাক্ষ্য প্রদান করিয়াছে তাহার নিকট সেই ভাষায় অথবা সে যেই ভাষা বুঝিতে সক্ষম সেই ভাষায় উহা ব্যাখ্যা করিতে হইবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-14" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="check-square" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">১৪।</span> বিচারের সমাপ্তি
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> পারিবারিক আদালত, সকল পক্ষের সাক্ষ্য গ্রহণ শেষ হইবার পর, উভয় পক্ষের মধ্যে আপোষ বা মীমাংসা প্রতিষ্ঠার জন্য পুনরায় প্রচেষ্টা চালাইবে।</p>
+                        <p><span class="num-badge">(২)</span> উপধারা <span class="num-badge">(১)</span> এর অধীন আপোষ বা মীমাংসা প্রতিষ্ঠা সম্ভব না হইলে, আদালত রায় ঘোষণা করিবে এবং উক্ত রায় ঘোষণার সঙ্গে সঙ্গে অথবা অনধিক <span class="num-badge">৭ (সাত)</span> দিনের মধ্যে রায় সম্পর্কে পক্ষগণ বা তাহাদের প্রতিনিধি বা আইনজীবীগণকে যথাযথ নোটিশ প্রদান করিতে হইবে ও ডিক্রি প্রদত্ত হইবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-15" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="handshake" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">১৫।</span> আপোষ ডিক্রি
+                    </h3>
+                    <p class="text-lg pl-2">যেক্ষেত্রে বিরোধীয় মোকদ্দমা আপোষ বা মীমাংসার মাধ্যমে নিষ্পত্তি হয়, সেইক্ষেত্রে আদালত উক্ত আপোষ বা মীমাংসা চুক্তির ভিত্তিতে মোকদ্দমার ডিক্রি বা সিদ্ধান্ত প্রদান করিবে।</p>
+                </div>
+
+                <div id="sec-16" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="pen-tool" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">১৬।</span> রায় লিখন
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> পারিবারিক আদালতের প্রত্যেকটি রায় বা আদেশ মোকদ্দমা পরিচালনাকারী বিচারক কর্তৃক বা তৎকর্তৃক প্রদত্ত নির্দেশনা অনুযায়ী আদালতের ভাষায় লিখিতে হইবে এবং উহা ঘোষণার সময় প্রকাশ্য আদালতে উক্ত বিচারক কর্তৃক স্বাক্ষরিত ও তারিখযুক্ত হইতে হইবে।</p>
+                        <p><span class="num-badge">(২)</span> আপিলযোগ্য সকল রায় বা আদেশে নিষ্পত্তির বিষয়, তৎসংক্রান্ত সিদ্ধান্ত এবং উক্ত সিদ্ধান্তের কারণসমূহের উল্লেখ থাকিবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-17" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="shield-check" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">১৭।</span> ডিক্রি বলবৎ করণ
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> পারিবারিক আদালত নির্ধারিত ফরমে ও পদ্ধতিতে ডিক্রি প্রদান করিবে এবং উহার বিবরণ নির্ধারিত ডিক্রি রেজিস্টার বহিতে লিপিবদ্ধ করিবে।</p>
+                        <p><span class="num-badge">(২)</span> যদি ডিক্রির দাবি পূরণকল্পে আদালতের সম্মুখে কোনো অর্থ পরিশোধ করা হয় বা কোনো সম্পত্তি হস্তান্তর করা হয়, তাহা হইলে উপরিউক্ত রেজিস্ট্রারে অনুরূপ পরিশোধ বা হস্তান্তরের বিষয় লিপিবদ্ধ করিতে হইবে।</p>
+                        <p><span class="num-badge">(৩)</span> যেক্ষেত্রে ডিক্রি অর্থ পরিশোধ সম্পর্কিত হয় এবং আদালত কর্তৃক নির্ধারিত সময়ে ডিক্রিকৃত অর্থ পরিশোধিত না হয়, সেইক্ষেত্রে উক্তরূপ নির্ধারিত সময় অতিবাহিত হইবার <span class="num-badge">১ (এক)</span> বৎসরের মধ্যে ডিক্রিদার কর্তৃক আবেদনের পরিপ্রেক্ষিতে ডিক্রিটি বাস্তবায়ন করা হইবে, যথা:</p>
+                        <div class="pl-4 space-y-2">
+                            <p><span class="num-badge">(ক)</span> দেওয়ানি কার্যবিধির অধীন কোনো দেওয়ানি আদালত কর্তৃক প্রদত্ত অর্থের ডিক্রির ন্যায়; অথবা</p>
+                            <p><span class="num-badge">(খ)</span> ফৌজদারি কার্যবিধির অধীন ম্যাজিস্ট্রেট কর্তৃক প্রদত্ত জরিমানা প্রদানের আদেশের ন্যায় এবং উক্তরূপে বাস্তবায়নের পর ডিক্রির আদায়কৃত অর্থ ডিক্রিদারকে প্রদান করিতে হইবে।</p>
+                        </div>
+                        <p><span class="num-badge">(৪)</span> উপধারা <span class="num-badge">(৩)</span> এর দফা <span class="num-badge">(ক)</span> এর অধীন ডিক্রি বাস্তবায়নের উদ্দেশ্যে, পারিবারিক আদালত দেওয়ানি আদালত হিসাবে গণ্য হইবে এবং দেওয়ানি আদালতের সকল ক্ষমতা উহার থাকিবে।</p>
+                        <p><span class="num-badge">(৫)</span> উপধারা <span class="num-badge">(৩)</span> এর দফা <span class="num-badge">(খ)</span> এর অধীন ডিক্রি বাস্তবায়নের উদ্দেশ্যে পারিবারিক আদালতের বিচারক একজন প্রথম শ্রেণির ম্যাজিস্ট্রেট হিসাবে গণ্য হইবেন এবং ফৌজদারি কার্যবিধির অধীন উক্ত ম্যাজিস্ট্রেটের সকল ক্ষমতা তাহার থাকিবে এবং তিনি ডিক্রিকৃত বকেয়া অর্থ আদায়ের জন্য উক্ত কার্যবিধিতে জরিমানা আদায়ের জন্য বর্ণিত পদ্ধতিতে ওয়ারেন্ট জারি করিতে পারিবেন এবং ওয়ারেন্ট জারির পর অপরিশোধিত সম্পূর্ণ ডিক্রিকৃত অর্থ বা উহার কোনো অংশের জন্য রায় দেনাদারকে অনধিক <span class="num-badge">৩ (তিন)</span> মাস অথবা পরিশোধ হওয়া পর্যন্ত, যাহা পূর্বে ঘটে, কারাদণ্ডের আদেশ প্রদান করিতে পারিবে।</p>
+                        <p><span class="num-badge">(৬)</span> যেক্ষেত্রে কোনো ডিক্রি অর্থ পরিশোধ সংক্রান্ত না হয়, সেইক্ষেত্রে উক্ত ডিক্রি দেওয়ানি আদালতের অর্থ সংক্রান্ত ডিক্রি ব্যতীত অন্য কোনো ডিক্রির ন্যায় বাস্তবায়ন করিতে হইবে এবং এতদুদ্দেশ্যে আদালত একটি দেওয়ানি আদালত হিসাবে গণ্য হইবে এবং দেওয়ানি কার্যবিধির অধীন উক্ত আদালতের সকল ক্ষমতা উহার থাকিবে।</p>
+                        <p><span class="num-badge">(৭)</span> ডিক্রি প্রদানকারী পারিবারিক আদালত স্বয়ং ডিক্রি বাস্তবায়ন করিবে অথবা ডিক্রি প্রদানকারী আদালত ডিক্রি বাস্তবায়নের জন্য অন্য কোনো পারিবারিক আদালতে উহা বদলি করিতে পারিবে এবং উক্ত ডিক্রি বাস্তবায়নের ক্ষেত্রে যে আদালতে বদলি করা হইয়াছে সেই আদালতের ডিক্রি প্রদানকারী পারিবারিক আদালতের সকল ক্ষমতা থাকিবে, যেন উক্ত আদালতই ডিক্রি প্রদান করিয়াছে।</p>
+                        <p><span class="num-badge">(৮)</span> আদালত, উপযুক্ত বিবেচনা করিলে, তৎকর্তৃক প্রদত্ত ডিক্রির অর্থ কিস্তিতে পরিশোধ করিবার আদেশ প্রদান করিতে পারিবে এবং যেরূপ উপযুক্ত মনে করিবে সেইরূপ কিস্তির সংখ্যা নির্ধারণ করিয়া দিতে পারিবে।</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 18-21 -->
+            <section id="sec-18" class="scroll-mt-24 space-y-6">
+                <div id="sec-18" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="building" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">১৮।</span> পারিবারিক আপিল আদালত প্রতিষ্ঠা
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> এই আইনের উদ্দেশ্য পূরণকল্পে, সরকার, সরকারি গেজেটে প্রজ্ঞাপন দ্বারা, প্রত্যেক জেলার জন্য এক বা একাধিক পারিবারিক আপিল আদালত প্রতিষ্ঠা করিতে পারিবে:</p>
+                        <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700"><strong>তবে শর্ত থাকে যে,</strong> কোনো জেলার জন্য একাধিক পারিবারিক আপিল আদালত প্রতিষ্ঠিত হইলে, সরকার, সরকারি গেজেটে প্রজ্ঞাপন দ্বারা, উক্ত আপিল আদালতসমূহের স্থানীয় এখতিয়ার নির্ধারণ করিবে।</p>
+                        <p><span class="num-badge">(২)</span> জেলা জজ পদমর্যাদার <span class="num-badge">১ (এক)</span> জন বিচারকের সমন্বয়ে পারিবারিক আপিল আদালত গঠিত হইবে।</p>
+                        <p><span class="num-badge">(৩)</span> উপধারা <span class="num-badge">(১)</span> এর অধীন পারিবারিক আপিল আদালত প্রতিষ্ঠার পূর্ব পর্যন্ত স্বীয় অধিক্ষেত্রে জেলা জজ আদালত পারিবারিক আপিল আদালত হিসাবে দায়িত্ব পালন করিবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-19" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="arrow-up-right" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">১৯।</span> আপিল দায়ের ও নিষ্পত্তি
+                    </h3>
+                    <div class="space-y-4 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> পারিবারিক আদালতের রায়, ডিক্রি বা আদেশের বিরুদ্ধে পারিবারিক আপিল আদালতে আপিল দায়ের করা যাইবে:</p>
+                        <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700"><strong>তবে শর্ত থাকে যে,</strong> পারিবারিক আদালত কর্তৃক প্রদত্ত কোনো ডিক্রির বিরুদ্ধে নিম্নবর্ণিত ক্ষেত্রে আপিল দায়ের করা যাইবে না, যথা:-<br>
+                        <span class="num-badge">(ক)</span> Dissolution of Muslim Marriages Act, 1939 (Act No. VIII of 1939) এর section 2 এর clause (viii) এর sub-clause (d) তে বর্ণিত কারণে বিবাহ বিচ্ছেদের ক্ষেত্র ব্যতীত অন্য কোনো বিবাহ বিচ্ছেদ; এবং<br>
+                        <span class="num-badge">(খ)</span> দেনমোহরের ক্ষেত্রে অনধিক <span class="num-badge">৫০ (পঞ্চাশ)</span> হাজার টাকার ডিক্রি।</p>
+
+                        <p><span class="num-badge">(২)</span> কোনো আপিল সংশ্লিষ্ট রায়, ডিক্রি বা আদেশ প্রদানের তারিখ হইতে উহার নকল সংগ্রহের জন্য প্রয়োজনীয় সময় বাদ দিয়া অনধিক <span class="num-badge">৩০ (ত্রিশ)</span> দিনের মধ্যে আপিল দায়ের করিতে হইবে:</p>
+                        <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700"><strong>তবে শর্ত থাকে যে,</strong> পারিবারিক আপিল আদালত উপযুক্ত কারণে উক্ত মেয়াদ বৃদ্ধি করিতে পারিবে।</p>
+
+                        <p><span class="num-badge">(৩)</span> যেকোনো আপিল—</p>
+                        <div class="pl-4 space-y-1">
+                            <p><span class="num-badge">(ক)</span> লিখিত আকারে হইবে;</p>
+                            <p><span class="num-badge">(খ)</span> আপিলকারী যে কারণে রায়, ডিক্রি বা আদেশের বিরোধিতা করিতেছেন তাহার কারণ উল্লেখ করিতে হইবে;</p>
+                            <p><span class="num-badge">(গ)</span> পক্ষগণের নাম, বর্ণনা ও ঠিকানা উল্লেখ করিতে হইবে; এবং</p>
+                            <p><span class="num-badge">(ঘ)</span> আপিলকারী কর্তৃক স্বাক্ষরিত হইতে হইবে।</p>
+                        </div>
+
+                        <p><span class="num-badge">(৪)</span> আদালতের যে রায়, ডিক্রি বা আদেশের বিরুদ্ধে আপিল দায়ের করা হইয়াছে উহার একটি প্রত্যয়িত অনুলিপি আপিলের সহিত সংযুক্ত করিতে হইবে।</p>
+
+                        <p><span class="num-badge">(৫)</span> পারিবারিক আপিল আদালত কর্তৃক প্রদত্ত কোনো আদেশ, যথাশীঘ্র সম্ভব, পারিবারিক আদালতকে অবহিত করিতে হইবে এবং উক্ত আদালত তদনুসারে রায়, ডিক্রি বা আদেশ পরিবর্তন বা সংশোধন করিবে এবং ডিক্রি রেজিস্টারের যথাযথ কলামে সেই মর্মে প্রয়োজনীয় অন্তর্ভুক্তির কার্য সম্পাদন করিবে।</p>
+
+                        <p><span class="num-badge">(৬)</span> ধারা <span class="num-badge">১৮</span> অধীন জেলা জজ আদালত পারিবারিক আপিল আদালত হিসাবে দায়িত্ব পালনকালীন কোনো আপিল অতিরিক্ত জেলা জজ বা যুগ্ম জেলা জজ আদালতে শুনানি ও নিষ্পত্তির জন্য প্রেরণ করিতে পারিবে এবং উক্তরূপ আদালত হইতে স্থানান্তরকৃত কোনো আপিল প্রত্যাহার করিতে পারিবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-20" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="repeat" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">২০।</span> মোকদ্দমা এবং আপিল স্থানান্তর ও স্থগিতকরণ
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> হাইকোর্ট বিভাগ, কোনো পক্ষের আবেদনক্রমে বা স্বীয় উদ্যোগে, লিখিত আদেশ দ্বারা, দায়েরকৃত যেকোনো—</p>
+                        <div class="pl-4 space-y-1">
+                            <p><span class="num-badge">(ক)</span> মোকদ্দমা একই জেলার এক পারিবারিক আদালত হইতে অন্য পারিবারিক আদালতে অথবা এক জেলার পারিবারিক আদালত হইতে অন্য জেলার পারিবারিক আদালতে,</p>
+                            <p><span class="num-badge">(খ)</span> আপিল এক জেলার পারিবারিক আপিল আদালত হইতে অন্য জেলার পারিবারিক আপিল আদালতে, স্থানান্তর করিতে পারিবে।</p>
+                        </div>
+                        <p><span class="num-badge">(২)</span> পারিবারিক আপিল আদালত, কোনো পক্ষের আবেদনের পরিপ্রেক্ষিতে বা স্বীয় উদ্যোগে, লিখিত আদেশ দ্বারা এই আইনের অধীন যেকোনো মোকদ্দমা তাহার নিজ এখতিয়ারাধীন স্থানীয় সীমানার মধ্যে এক পারিবারিক আদালত হইতে অন্য পারিবারিক আদালতে স্থানান্তর করিতে পারিবে।</p>
+                        <p><span class="num-badge">(৩)</span> এই আইনে যাহা কিছুই থাকুক না কেন, এই ধারার অধীন যে আদালতে কোনো মোকদ্দমা বা আপিল স্থানান্তরিত হইবে সেই আদালত উহা এমনভাবে নিষ্পত্তি করিবে, যেন উহার নিকট উক্ত মোকদ্দমা বা আপিল দায়ের করা হইয়াছে:</p>
+                        <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700"><strong>তবে শর্ত থাকে যে,</strong> মোকদ্দমা স্থানান্তরের কারণে, পরবর্তী বিচারককে নূতন করিয়া কার্যধারা আরম্ভ করিবার প্রয়োজন হইবে না, যদি না উক্ত বিচারক লিখিতভাবে কারণ উল্লেখপূর্বক ভিন্নরূপ কোনো নির্দেশ প্রদান করেন।</p>
+                        <p><span class="num-badge">(৪)</span> পারিবারিক আপিল আদালত, লিখিত আদেশ দ্বারা, তাহার এখতিয়ারাধীন স্থানীয় সীমানার মধ্যে কোনো পারিবারিক আদালতের নিকট বিচারাধীন মোকদ্দমা স্থগিত করিতে পারিবে।</p>
+                        <p><span class="num-badge">(৫)</span> হাইকোর্ট বিভাগ, লিখিত আদেশ দ্বারা, কোনো পারিবারিক আদালতে বা পারিবারিক আপিল আদালতে বিচারাধীন যেকোনো মোকদ্দমা বা আপিল স্থগিত করিতে পারিবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-21" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="clock" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">২১।</span> পারিবারিক আদালত বা পারিবারিক আপিল আদালত কর্তৃক অন্তর্বর্তী আদেশ প্রদান
+                    </h3>
+                    <p class="text-lg pl-2">যদি মোকদ্দমা বা আপিলের যেকোনো পর্যায়ে, পারিবারিক আদালত বা পারিবারিক আপিল আদালত হলফনামা বা অন্য কিছু দ্বারা এই মর্মে সন্তুষ্ট হয় যে, মোকদ্দমা বা আপিলের উদ্দেশ্যকে ব্যাহত করা হইতে কোনো পক্ষকে বিরত রাখিবার জন্য তাৎক্ষণিক ব্যবস্থা গ্রহণ জরুরি, সেইক্ষেত্রে আদালত উহার নিকট যেরূপ উপযুক্ত প্রতীয়মান হইবে সেইরূপ অন্তর্বর্তী আদেশ প্রদান করিতে পারিবে।</p>
+                </div>
+            </section>
+
+            <!-- Section 22-26 -->
+            <section id="sec-22" class="scroll-mt-24 space-y-6">
+                <div id="sec-22" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="mail" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">২২।</span> সমন জারির ক্ষমতা
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> পারিবারিক আদালত বা পারিবারিক আপিল আদালত যেকোনো ব্যক্তিকে আদালতে হাজির হইতে এবং সাক্ষ্য প্রদানের জন্য অথবা কোনো দলিল দাখিল করিবার বা করানোর জন্য সমন জারি করিতে পারিবে:</p>
+                        <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700"><strong>তবে শর্ত থাকে যে—</strong><br>
+                        <span class="num-badge">(ক)</span> দেওয়ানি কার্যবিধির ধারা <span class="num-badge">১৩৩</span> এর উপ-ধারা <span class="num-badge">(১)</span> এর অধীন যে ব্যক্তিকে স্ব-শরীরে আদালতে হাজির হইতে অব্যাহতি দেওয়া হইয়াছে তাহাকে ব্যক্তিগতভাবে হাজির হইতে বাধ্য করা যাইবে না:<br>
+                        <span class="num-badge">(খ)</span> যদি আদালতের নিকট যুক্তিসংগতভাবে প্রতীয়মান হয় যে, অযৌক্তিক বিলম্ব, ব্যয় বা অসুবিধা ব্যতীত কোনো সাক্ষীর উপস্থিতি কার্যকর করা সম্ভব হইবে না, তাহা হইলে আদালত উক্ত সাক্ষীকে সমন দিতে বা উক্ত সাক্ষীর বিরুদ্ধে ইতোমধ্যে জারীকৃত সমন বলবৎ করিতে অস্বীকার করিতে পারিবে।</p>
+                        <p><span class="num-badge">(২)</span> কোনো ব্যক্তি উপ-ধারা <span class="num-badge">(১)</span> এর অধীন জারীকৃত সমন ইচ্ছাপূর্বক অমান্য করিলে, উহা হইবে একটি অপরাধ এবং তজ্জন্য পারিবারিক আদালত বা পারিবারিক আপিল আদালত অভিযুক্ত ব্যক্তিকে, তাহাকে আত্মপক্ষ সমর্থনের সুযোগ প্রদান সাপেক্ষে, অনধিক <span class="num-badge">১০০ (একশত)</span> টাকা অর্থদণ্ডে দণ্ডিত করিতে পারিবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-23" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="alert-octagon" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">২৩।</span> পারিবারিক আদালত বা পারিবারিক আপিল আদালত অবমাননা
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> যদি কোনো ব্যক্তি আইনসংগত কারণ ব্যতিরেকে—</p>
+                        <div class="pl-4 space-y-1">
+                            <p><span class="num-badge">(ক)</span> পারিবারিক আদালত বা পারিবারিক আপিল আদালতের প্রতি অসম্মান প্রদর্শন করেন, বা</p>
+                            <p><span class="num-badge">(খ)</span> পারিবারিক আদালত বা পারিবারিক আপিল আদালতের কার্যে প্রতিবন্ধকতা সৃষ্টি করেন, বা</p>
+                            <p><span class="num-badge">(গ)</span> পারিবারিক আদালত বা পারিবারিক আপিল আদালত কর্তৃক জিজ্ঞাসিত কোনো প্রশ্নের উত্তর প্রদানে বাধ্য থাকা সত্ত্বেও, উত্তর প্রদানের অস্বীকার করেন, বা</p>
+                            <p><span class="num-badge">(ঘ)</span> সত্য কথা বলিবার জন্য শপথ গ্রহণ করিতে অথবা পারিবারিক আদালতে বা পারিবারিক আপিল আদালতে তৎকর্তৃক প্রদত্ত বিবৃতিতে স্বাক্ষরদান করিতে অস্বীকার করেন,</p>
+                        </div>
+                        <p>তাহা হইলে তিনি পারিবারিক আদালত বা পারিবারিক আপিল আদালত অবমাননা করিয়াছেন মর্মে গণ্য হইবেন।</p>
+                        <p><span class="num-badge">(২)</span> উপধারা <span class="num-badge">(১)</span> এর অধীন কৃত অপরাধের ক্ষেত্রে, পারিবারিক আদালত বা পারিবারিক আপিল আদালত উক্তরূপ অবমাননার দায়ে অভিযুক্ত ব্যক্তির বিচার করিতে পারিবে এবং তাহাকে অনধিক <span class="num-badge">২০০ (দুইশত)</span> টাকা অর্থদণ্ডে দণ্ডিত করিতে পারিবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-24" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="users" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">২৪।</span> প্রতিনিধিদের মাধ্যমে উপস্থিতি
+                    </h3>
+                    <p class="text-lg pl-2">যদি কোনো ব্যক্তির এই আইনের অধীন পারিবারিক আদালত বা পারিবারিক আপিল আদালতের সম্মুখে সাক্ষী ব্যতীত অন্য কোনো কারণে উপস্থিত হইবার প্রয়োজন হয় এবং উক্ত ব্যক্তি যদি পর্দানশিন মহিলা হন বা শারীরিকভাবে অক্ষম হন, তাহা হইলে পারিবারিক আদালত বা পারিবারিক আপিল আদালত তাহার নিকট হইতে যথাযথভাবে ক্ষমতাপ্রাপ্ত কোনো প্রতিনিধিকে তাহার পক্ষে আদালতের সম্মুখে উপস্থিত হইবার অনুমতি প্রদান করিতে পারিবে।</p>
+                </div>
+
+                <div id="sec-25" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="credit-card" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">২৫।</span> কোর্ট ফি
+                    </h3>
+                    <p class="text-lg pl-2">পারিবারিক আদালতে এই আইনের অধীন কোনো মোকদ্দমার আরজি দাখিল করিতে প্রদেয় কোর্ট ফি হইবে <span class="num-badge">২০০ (দুইশত)</span> টাকা।</p>
+                </div>
+
+                <div id="sec-26" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="book" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">২৬।</span> মুসলিম পারিবারিক আইনের বিধানকে প্রভাবিত না করা
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> এই আইনের কোনো কিছুই মুসলিম পারিবারিক আইন অথবা তদধীন প্রণীত বিধিমালার কোনো বিধানকে প্রভাবিত করিবে না।</p>
+                        <p><span class="num-badge">(২)</span> যেক্ষেত্রে কোনো পারিবারিক আদালত মুসলিম আইনের অধীন সংঘটিত কোনো বিবাহ বিচ্ছেদের জন্য ডিক্রি প্রদান করে, সেইক্ষেত্রে আদালত ডিক্রি প্রদানের <span class="num-badge">৭ (সাত)</span> দিনের মধ্যে মুসলিম পারিবারিক আইনের ধারা <span class="num-badge">৭</span> এ উল্লিখিত সংশ্লিষ্ট চেয়ারম্যানকে রেজিস্ট্রি ডাকযোগে উক্ত ডিক্রির প্রত্যয়িত প্রতিলিপি প্রেরণ করিবে এবং, চেয়ারম্যান উক্ত প্রতিলিপি প্রাপ্ত হইবার পর, এইরূপ কার্যক্রম গ্রহণ করিবেন যেন তিনি উক্ত আইনের অধীন কোনো তালাকের সংবাদ প্রাপ্ত হইয়াছেন।</p>
+                        <p><span class="num-badge">(৩)</span> মুসলিম আইন অনুযায়ী অনুষ্ঠিত কোনো বিবাহ বিচ্ছেদের জন্য পারিবারিক আদালত কোনো ডিক্রি প্রদান করিলে যে তারিখে চেয়ারম্যান উপধারা <span class="num-badge">(২)</span> এর অধীন উহার প্রতিলিপি গ্রহণ করিয়াছেন সেই তারিখ হইতে <span class="num-badge">৯০ (নব্বই)</span> দিন অতিবাহিত না হওয়া পর্যন্ত উহা কার্যকর হইবে না:</p>
+                        <p class="bg-gray-50 p-3 rounded-lg border-l-4 border-gray-400 text-gray-700"><strong>তবে শর্ত থাকে যে,</strong> উক্ত সময়ের মধ্যে পক্ষগণের মধ্যে মুসলিম পারিবারিক আইনের বিধান অনুসারে কোনো আপোষ মীমাংসা কার্যকর হইলে উক্ত ডিক্রির কোনো কার্যকারিতা থাকিবে না।</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 27-31 -->
+            <section id="sec-27" class="scroll-mt-24 space-y-6 mb-12">
+                <div id="sec-27" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="shield" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">২৭।</span> Guardians and Wards Act, 1890 এর উদ্দেশ্য পূরণকল্পে পারিবারিক আদালতকে জেলা আদালতরূপে গণ্যকরণ
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> পারিবারিক আদালত, Guardians and Wards Act, 1890 (Act No. VIII of 1890) এর উদ্দেশ্য পূরণকল্পে, District Court হিসাবে গণ্য হইবে এবং এই আইনে যাহা কিছুই থাকুক না কেন, উক্ত আইনে বর্ণিত বিষয়সমূহ সম্পর্কে উহাতে নির্ধারিত পদ্ধতি অনুসরণ করিতে হইবে।</p>
+                        <p><span class="num-badge">(২)</span> উক্ত Guardians and Wards Act- এ যাহা কিছুই থাকুক না কেন, উক্ত আইনের অধীন District Court হিসাবে পারিবারিক আদালত কর্তৃক প্রদত্ত যে কোনো আদেশের বিরুদ্ধে পারিবারিক আপিল আদালতে আপিল দায়ের করা যাইবে।</p>
+                        <p><span class="num-badge">(৩)</span> উপধারা <span class="num-badge">(২)</span> এর অধীন দায়েরকৃত আপিলের ক্ষেত্রে ধারা <span class="num-badge">১৯</span> এর বিধানাবলি প্রযোজ্য হইবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-28" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="file-minus" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">২৮।</span> কতিপয় আইনের বিধানাবলির প্রযোজ্যতা ও অপ্রযোজ্যতা
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> এই আইন বা তদধীন প্রণীত কোনো বিধিতে ভিন্নরূপ কিছু উল্লেখ না থাকিলে, Evidence Act, 1872 (Act No.1 of 1872) এবং দেওয়ানি কার্যবিধির ধারা <span class="num-badge">১০</span> ও <span class="num-badge">১১</span> ব্যতীত অন্যান্য বিধানসমূহ পারিবারিক আদালত ও পারিবারিক আপিল আদালতের কার্যধারার ক্ষেত্রে প্রযোজ্য হইবে না।</p>
+                        <p><span class="num-badge">(২)</span> পারিবারিক আদালত ও পারিবারিক আপিল আদালতের সকল কার্যধারার ক্ষেত্রে Oaths Act, 1873 (Act No. X of 1873) প্রযোজ্য হইবে।</p>
+                    </div>
+                </div>
+
+                <div id="sec-29" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="settings" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">২৯।</span> বিধি প্রণয়নের ক্ষমতা
+                    </h3>
+                    <p class="text-lg pl-2">এই আইনের উদ্দেশ্য পূরণকল্পে, সরকার, সরকারি গেজেটে প্রজ্ঞাপন দ্বারা, বিধি প্রণয়ন করিতে পারিবে।</p>
+                </div>
+
+                <div id="sec-30" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="trash-2" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">৩০।</span> রহিতকরণ ও হেফাজত
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> Family Courts Ordinance, 1985 (Ordinance No. XVIII of 1985) অতঃপর উক্ত Ordinance বলিয়া উল্লিখিত, এতদ্বারা রহিত করা হইল।</p>
+                        <p><span class="num-badge">(২)</span> উপধারা <span class="num-badge">(১)</span> এর অধীন রহিত হওয়া সত্বেও, উক্ত Ordinance এর অধীন—</p>
+                        <div class="pl-4 space-y-2">
+                            <p><span class="num-badge">(ক)</span> কৃত কোনো কার্য ও গৃহীত কোনো ব্যবস্থা বা সূচিত কোনো কার্যধারা এই আইনের অধীন কৃত, গৃহীত বা সূচিত হইয়াছে বলিয়া গণ্য হইবে;</p>
+                            <p><span class="num-badge">(খ)</span> প্রণীত বিধি, জারীকৃত প্রজ্ঞাপন এবং প্রদত্ত কোনো আদেশ উক্তরূপ রহিত হওয়ার অব্যবহিত পূর্বে কার্যকর থাকিলে, উহা এই আইনের বিধানাবলির সহিত সামঞ্জস্যপূর্ণ হওয়া সাপেক্ষে, এই আইনের অধীন প্রণীত, জারীকৃত এবং প্রদত্ত বলিয়া গণ্য হইবে; এবং</p>
+                            <p><span class="num-badge">(গ)</span> কোনো কার্যধারা অনিষ্পন্ন থাকিলে উহা এইরূপে নিষ্পন্ন করিতে হইবে, যেন উক্ত Ordinance রহিত হয় নাই।</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sec-31" class="section-card scroll-mt-24">
+                    <h3 class="font-bold text-brand-900 text-xl border-b pb-3 mb-4 flex items-center gap-2">
+                        <i data-lucide="globe" class="w-6 h-6 text-brand-600"></i> <span class="num-badge text-xl">৩১।</span> ইংরেজিতে অনূদিত পাঠ প্রকাশ
+                    </h3>
+                    <div class="space-y-3 text-lg pl-2">
+                        <p><span class="num-badge">(১)</span> এই আইন কার্যকর হইবার পর সরকার, সরকারি গেজেটে প্রজ্ঞাপন দ্বারা, এই আইনের ইংরেজিতে অনূদিত একটি নির্ভরযোগ্য পাঠ (Authentic English Text) প্রকাশ করিতে পারিবে।</p>
+                        <p><span class="num-badge">(২)</span> এই আইন এবং ইংরেজি পাঠের মধ্যে বিরোধের ক্ষেত্রে এই আইন প্রাধান্য পাইবে।</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Footer -->
+            <footer class="text-center text-gray-500 text-base py-8 border-t border-gray-200">
+                <p>তথ্যসূত্র: পারিবারিক আদালত আইন, ২০২৩ (২০২৩ সনের ২৬ নং আইন)</p>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- Script for Navigation and Summary Modal Logic -->
+    <script>
+        lucide.createIcons();
+
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+            document.body.style.overflow = sidebar.classList.contains('-translate-x-full') ? '' : 'hidden';
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleMenu);
+        closeMenuBtn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) toggleMenu();
+            });
+        });
+
+        // Summary Modal Functions
+        function openSummaryModal() {
+            if (!sidebar.classList.contains('-translate-x-full')) {
+                toggleMenu(); // Close mobile sidebar if open
+            }
+            const modal = document.getElementById('summary-modal');
+            const content = document.getElementById('summary-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                content.classList.remove('scale-95', 'translate-y-4');
+            }, 10);
+        }
+
+        function closeSummaryModal() {
+            const modal = document.getElementById('summary-modal');
+            const content = document.getElementById('summary-content');
+            content.classList.add('scale-95', 'translate-y-4');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Close Modal when clicking outside the card
+        document.getElementById('summary-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'summary-modal') {
+                closeSummaryModal();
+            }
+        });
+
+        function highlightNavOnScroll() {
+            const scrollY = window.pageYOffset;
+            document.querySelectorAll('section[id]').forEach(current => {
+                const sectionHeight = current.offsetHeight;
+                const sectionTop = current.offsetTop - 150; 
+                const sectionId = current.getAttribute('id');
+                
+                if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                    const navLink = document.querySelector(`.nav-link[href*="${sectionId}"]`);
+                    if(navLink) navLink.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', highlightNavOnScroll);
+        highlightNavOnScroll();
+
+        // PWA setup — GitHub Pages compatible
+        // The manifest and service worker are separate same-origin files so Chrome
+        // can reliably evaluate installability and offline support.
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("./service-worker.js", { scope: "./" })
+                    .then(() => console.log("PWA service worker registered"))
+                    .catch((err) => console.warn("PWA service worker registration failed:", err));
+            });
+        }
+
+        let deferredPrompt;
+        const installBtn = document.getElementById('install-btn');
+
+        const isStandalone = () =>
+            window.matchMedia('(display-mode: standalone)').matches ||
+            window.navigator.standalone === true;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (installBtn && !isStandalone()) installBtn.classList.remove('hidden');
+        });
+
+        if (installBtn) {
+            installBtn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') installBtn.classList.add('hidden');
+                    deferredPrompt = null;
+                    return;
+                }
+
+                // Chrome may not expose beforeinstallprompt even when manual
+                // installation is available. Give the Android user a clear path.
+                alert('ইনস্টল অপশনটি Chrome-এর মেনু (⋮) থেকে “Add to Home screen” / “Install app” নির্বাচন করে ব্যবহার করুন। যদি অপশনটি না থাকে, কিছুক্ষণ এই পেজ ব্যবহার করে আবার চেষ্টা করুন।');
+            });
+        }
+
+        // If Chrome does not fire beforeinstallprompt, keep the install control
+        // available so users still receive the manual-install instructions.
+        setTimeout(() => {
+            if (installBtn && !deferredPrompt && !isStandalone()) {
+                installBtn.classList.remove('hidden');
+            }
+        }, 2500);
+
+        window.addEventListener('appinstalled', () => {
+            if (installBtn) installBtn.classList.add('hidden');
+            deferredPrompt = null;
+        });
+    </script>
+</body>
+</html>
+

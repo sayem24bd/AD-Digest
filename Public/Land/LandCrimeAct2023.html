@@ -514,7 +514,7 @@
             document.getElementById('dynamic-manifest').href = URL.createObjectURL(manifestBlob);
 
             const swCode = `
-                const CACHE_NAME = 'land-crime-2023-v1';
+                const CACHE_NAME = 'land-crime-2023-v2';
                 self.addEventListener('install', (e) => { self.skipWaiting(); });
                 self.addEventListener('activate', (e) => { e.waitUntil(self.clients.claim()); });
                 self.addEventListener('fetch', (e) => {
